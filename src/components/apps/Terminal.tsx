@@ -14,12 +14,94 @@ const Terminal = () => {
     const terminalRef = useRef<HTMLDivElement>(null);
 
     const commands = {
-        help: { execute: () => ['Available commands:', 'help', 'about', 'skills', 'projects', 'contact', 'experience', 'education', 'clear', 'whoami', 'date', 'echo [text]', 'ls', ''] },
-        about: { execute: () => ['👨‍💻 Aladin – Full-Stack Developer based in Tunisia 🇹🇳', 'Building AI-driven web & mobile apps.'] },
-        clear: { execute: () => null },
-        whoami: { execute: () => ['aladin'] },
-        date: { execute: () => [new Date().toString()] },
+        help: {
+            execute: () => [
+                'Available commands:',
+                'help',
+                'about',
+                'skills',
+                'projects',
+                'contact',
+                'experience',
+                'education',
+                'clear',
+                'whoami',
+                'date',
+                'echo [text]',
+                'ls'
+            ]
+        },
+        about: {
+            execute: () => [
+                '👨‍💻 Alaa Eddine Daly – Full-Stack Developer based in Sousse, Tunisia 🇹🇳',
+                'Specialized in Spring Boot, React Native, and cloud technologies.',
+                'Seeking opportunities to build impactful digital products.'
+            ]
+        },
+        skills: {
+            execute: () => [
+                'Languages & Frameworks: Java, Kotlin, JavaScript/TypeScript, Python, SQL',
+                'Spring Boot, Angular, Spring Security, React, React Native, Expo, Clerk Auth, Postman',
+                'Databases & Tools: MySQL, PostgreSQL, Git/GitHub, Maven/Gradle, JWT, RESTful APIs, JDBC',
+                'Concepts: RBAC, Microservices, Artificial Intelligence, OOP, Web/Mobile Development, Database Design'
+            ]
+        },
+        projects: {
+            execute: () => [
+                            'LynkAi – Web application with JWT auth featuring RAG model for intelligent document Q&A and AI-powered summaries (Angular, Spring Boot, RAG, JWT, AI/ML)',
+                            'AI Storyboard Generator – AI-powered storyboard generator using custom VGG-inspired CNN with SDXL diffusion pipeline for 1024×1024 images (Python, AI/ML, Computer Vision, CNN, SDXL)',
+                            'Nexus Down – Robust download manager with infinite retry and concurrent parallel downloads (Python, Automation, File Management)',
+                            'Secure File Service – Secure cloud storage service with JWT auth and encrypted file storage (Kotlin, Security, File Management, JWT)',
+                            'Finora – Financial management mobile app with expense tracking, budgeting tools, and AI-driven insights (React Native, Expo, PostgreSQL)',
+                            'OCR Application – Intelligent document scanner using Tesseract OCR enhanced with Gemini API for advanced text understanding (HTML, JavaScript, OCR, Computer Vision, Gemini AI)',
+                            'Portfolio Website – Modern, responsive portfolio with smooth animations and dark theme (Next.js, React, Tailwind CSS, Framer Motion)',
+                            'FlameBot – Conversational AI chatbot powered by Google\'s Gemini API for natural conversation (JavaScript, Gemini AI, Chatbot, NLP)',
+                            'Restaurant Management – Desktop app for restaurant management with inventory, orders, and reporting (Java, Swing, SQL, JDBC)',
+                            '2D Shooter Game – Action-packed 2D shooting game with multiple levels and engaging mechanics (Unity, C#, Game Development)',
+                            'Zipit – GUI app for compressing and extracting ZIP archives, lightweight and efficient (Python, Tkinter, Zipfile)'
+                        ]
+                    },
+        contact: {
+            execute: () => [
+                'Email: dalyalaeddine@gmail.com',
+                'Phone: (+216) 58 247 509',
+                'Portfolio: aladin-daly-dev.vercel.app'
+            ]
+        },
+        experience: {
+            execute: () => [
+                'Smoft ERP – Internship (June 2025 – July 2025)',
+                '- Developed a full-stack e-commerce platform (packajungle.com) using HTML, CSS, JavaScript, PHP.',
+                '- Built custom OCR with TesseractOCR & GEMINI to automate formula processing, reducing manual entry by 30%.',
+                '- Debugged and resolved 15+ production issues, improving system stability.',
+                'Freelancer – Custom Development (2025 – Present)',
+                '- Built web & mobile apps integrating AI features: chatbots, automation, recommendation systems.',
+                '- Produced professional video edits using Adobe After Effects & Premiere Pro.'
+            ]
+        },
+        education: {
+            execute: () => [
+                'ISITCOM | Higher Institute of Computer Science and Communication Technologies, Hammam Sousse',
+                'Bachelor’s Degree in Computer Science (2023 – Present)'
+            ]
+        },
+        clear: {
+            execute: () => null
+        },
+        whoami: {
+            execute: () => ['Alaa Eddine Daly']
+        },
+        date: {
+            execute: () => [new Date().toString()]
+        },
+        echo: {
+            execute: (args: string[]) => [args.join(' ')]
+        },
+        ls: {
+            execute: () => ['Resume.pdf', 'Portfolio/', 'Projects/']
+        }
     };
+
 
     useEffect(() => {
         if (terminalRef.current) terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
