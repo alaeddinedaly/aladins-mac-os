@@ -174,7 +174,7 @@ export const useWindowStore = create<WindowStore>((set) => ({
               isMinimized: false,
               isMaximized: false,
               zIndex: state.highestZIndex + 1,
-              position: centeredPosition, // <-- set centered position here
+              position: centeredPosition,
             },
           ],
           highestZIndex: state.highestZIndex + 1,
@@ -192,9 +192,33 @@ export const useWindowStore = create<WindowStore>((set) => ({
       })),
   maximizeWindow: (windowId: string) =>
       set((state) => ({
-        windows: state.windows.map((w) =>
-            w.id === windowId ? { ...w, isMaximized: !w.isMaximized } : w
-        ),
+        windows: state.windows.map((w) => {
+          if (w.id !== windowId) return w;
+
+          // Toggle between maximized and restored state
+          if (w.isMaximized) {
+            // Restore to previous size and position
+            return {
+              ...w,
+              isMaximized: false,
+              size: w.previousSize || w.size,
+              position: w.previousPosition || w.position,
+            };
+          } else {
+            // Save current state and maximize
+            return {
+              ...w,
+              isMaximized: true,
+              previousSize: w.size,
+              previousPosition: w.position,
+              size: {
+                width: window.innerWidth - 40,
+                height: window.innerHeight - 100,
+              },
+              position: { x: 20, y: 40 },
+            };
+          }
+        }),
       })),
   focusWindow: (windowId: string) =>
       set((state) => ({

@@ -1,19 +1,28 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useThemeStore } from '@/store/themeStore';
+import { useWindowStore } from '@/store/windowStore';
+import { X, Minus, Maximize2 } from 'lucide-react';
+
+interface HistoryEntry {
+    type: 'prompt' | 'output' | 'error';
+    content: string;
+}
 
 const Terminal = () => {
     const darkMode = useThemeStore((state) => state.darkMode);
-    const [history, setHistory] = useState([
+    const { closeWindow, minimizeWindow, maximizeWindow } = useWindowStore();
+
+    const [history, setHistory] = useState<HistoryEntry[]>([
         { type: 'output', content: 'Last login: ' + new Date().toLocaleString() + ' on ttys000' },
         { type: 'output', content: "Welcome to my Portfolio Terminal" },
-        { type: 'output', content: 'Type "help" to see available commands\n' },
+        { type: 'output', content: 'Type "help" to see available commands\n' }
     ]);
     const [input, setInput] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const terminalRef = useRef<HTMLDivElement>(null);
 
-    const commands = {
+    const commands: Record<string, { execute: (args?: string[]) => string[] | null }> = {
         help: {
             execute: () => [
                 'Available commands:',
@@ -48,19 +57,19 @@ const Terminal = () => {
         },
         projects: {
             execute: () => [
-                            'LynkAi – Web application with JWT auth featuring RAG model for intelligent document Q&A and AI-powered summaries (Angular, Spring Boot, RAG, JWT, AI/ML)',
-                            'AI Storyboard Generator – AI-powered storyboard generator using custom VGG-inspired CNN with SDXL diffusion pipeline for 1024×1024 images (Python, AI/ML, Computer Vision, CNN, SDXL)',
-                            'Nexus Down – Robust download manager with infinite retry and concurrent parallel downloads (Python, Automation, File Management)',
-                            'Secure File Service – Secure cloud storage service with JWT auth and encrypted file storage (Kotlin, Security, File Management, JWT)',
-                            'Finora – Financial management mobile app with expense tracking, budgeting tools, and AI-driven insights (React Native, Expo, PostgreSQL)',
-                            'OCR Application – Intelligent document scanner using Tesseract OCR enhanced with Gemini API for advanced text understanding (HTML, JavaScript, OCR, Computer Vision, Gemini AI)',
-                            'Portfolio Website – Modern, responsive portfolio with smooth animations and dark theme (Next.js, React, Tailwind CSS, Framer Motion)',
-                            'FlameBot – Conversational AI chatbot powered by Google\'s Gemini API for natural conversation (JavaScript, Gemini AI, Chatbot, NLP)',
-                            'Restaurant Management – Desktop app for restaurant management with inventory, orders, and reporting (Java, Swing, SQL, JDBC)',
-                            '2D Shooter Game – Action-packed 2D shooting game with multiple levels and engaging mechanics (Unity, C#, Game Development)',
-                            'Zipit – GUI app for compressing and extracting ZIP archives, lightweight and efficient (Python, Tkinter, Zipfile)'
-                        ]
-                    },
+                'LynkAi – Web application with JWT auth featuring RAG model for intelligent document Q&A and AI-powered summaries (Angular, Spring Boot, RAG, JWT, AI/ML)',
+                'AI Storyboard Generator – AI-powered storyboard generator using custom VGG-inspired CNN with SDXL diffusion pipeline for 1024×1024 images (Python, AI/ML, Computer Vision, CNN, SDXL)',
+                'Nexus Down – Robust download manager with infinite retry and concurrent parallel downloads (Python, Automation, File Management)',
+                'Secure File Service – Secure cloud storage service with JWT auth and encrypted file storage (Kotlin, Security, File Management, JWT)',
+                'Finora – Financial management mobile app with expense tracking, budgeting tools, and AI-driven insights (React Native, Expo, PostgreSQL)',
+                'OCR Application – Intelligent document scanner using Tesseract OCR enhanced with Gemini API for advanced text understanding (HTML, JavaScript, OCR, Computer Vision, Gemini AI)',
+                'Portfolio Website – Modern, responsive portfolio with smooth animations and dark theme (Next.js, React, Tailwind CSS, Framer Motion)',
+                'FlameBot – Conversational AI chatbot powered by Google\'s Gemini API for natural conversation (JavaScript, Gemini AI, Chatbot, NLP)',
+                'Restaurant Management – Desktop app for restaurant management with inventory, orders, and reporting (Java, Swing, SQL, JDBC)',
+                '2D Shooter Game – Action-packed 2D shooting game with multiple levels and engaging mechanics (Unity, C#, Game Development)',
+                'Zipit – GUI app for compressing and extracting ZIP archives, lightweight and efficient (Python, Tkinter, Zipfile)'
+            ]
+        },
         contact: {
             execute: () => [
                 'Email: dalyalaeddine@gmail.com',
@@ -82,7 +91,7 @@ const Terminal = () => {
         education: {
             execute: () => [
                 'ISITCOM | Higher Institute of Computer Science and Communication Technologies, Hammam Sousse',
-                'Bachelor’s Degree in Computer Science (2023 – Present)'
+                'Bachelor\'s Degree in Computer Science (2023 – Present)'
             ]
         },
         clear: {
@@ -95,16 +104,17 @@ const Terminal = () => {
             execute: () => [new Date().toString()]
         },
         echo: {
-            execute: (args: string[]) => [args.join(' ')]
+            execute: (args = []) => [args.join(' ')]
         },
         ls: {
             execute: () => ['Resume_en.pdf', 'Portfolio/', 'Projects/']
         }
     };
 
-
     useEffect(() => {
-        if (terminalRef.current) terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+        if (terminalRef.current) {
+            terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+        }
     }, [history]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -135,7 +145,7 @@ const Terminal = () => {
             setHistory((prev) => [
                 ...prev,
                 { type: 'prompt', content: trimmedInput },
-                { type: 'output', content: args.join(' ') },
+                { type: 'output', content: args.join(' ') }
             ]);
             setInput('');
             return;
@@ -143,16 +153,18 @@ const Terminal = () => {
 
         if (command) {
             const output = command.execute(args);
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             setHistory((prev) => [
                 ...prev,
                 { type: 'prompt', content: trimmedInput },
-                ...(output ? [{ type: 'output', content: output.join('\n') }] : []),
+                ...(output ? [{ type: 'output', content: output.join('\n') }] : [])
             ]);
         } else {
             setHistory((prev) => [
                 ...prev,
                 { type: 'prompt', content: trimmedInput },
-                { type: 'error', content: `zsh: command not found: ${cmd}` },
+                { type: 'error', content: `zsh: command not found: ${cmd}` }
             ]);
         }
         setInput('');
@@ -165,27 +177,49 @@ const Terminal = () => {
             } w-full h-full max-h-[600px] flex flex-col`}
             onClick={() => inputRef.current?.focus()}
         >
-            {/* macOS Title Bar */}
             <div
                 className={`flex items-center px-3 py-2 gap-2 ${
                     darkMode ? 'bg-[#2b2b2b]' : 'bg-gray-100'
                 }`}
             >
                 <div className="flex gap-2">
-                    <div className="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
-                    <div className="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
-                    <div className="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            closeWindow('terminal');
+                        }}
+                        className="w-3 h-3 rounded-full bg-[#ff5f56] hover:brightness-110 transition-all flex items-center justify-center group"
+                    >
+                        <X className="w-2 h-2 opacity-0 group-hover:opacity-100 text-black/60" />
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            minimizeWindow('terminal');
+                        }}
+                        className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:brightness-110 transition-all flex items-center justify-center group"
+                    >
+                        <Minus className="w-2 h-2 opacity-0 group-hover:opacity-100 text-black/60" />
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            maximizeWindow('terminal');
+                        }}
+                        className="w-3 h-3 rounded-full bg-[#27c93f] hover:brightness-110 transition-all flex items-center justify-center group"
+                    >
+                        <Maximize2 className="w-2 h-2 opacity-0 group-hover:opacity-100 text-black/60" />
+                    </button>
                 </div>
                 <span
                     className={`text-xs font-medium mx-auto ${
                         darkMode ? 'text-neutral-400' : 'text-gray-500'
                     }`}
                 >
-          aladin — bash — 80x24
-        </span>
+                    aladin — bash — 80x24
+                </span>
             </div>
 
-            {/* Terminal Content */}
             <div
                 ref={terminalRef}
                 className={`flex-1 p-4 overflow-y-auto font-mono text-sm backdrop-blur-xl transition-colors duration-300 ${
@@ -203,15 +237,15 @@ const Terminal = () => {
                     >
                         {entry.type === 'prompt' && (
                             <div className="flex gap-2">
-                <span className={darkMode ? 'text-green-400' : 'text-green-700'}>
-                  aladin@macOS
-                </span>
+                                <span className={darkMode ? 'text-green-400' : 'text-green-700'}>
+                                    aladin@macOS
+                                </span>
                                 <span className={darkMode ? 'text-blue-400' : 'text-blue-700'}>
-                  ~
-                </span>
+                                    ~
+                                </span>
                                 <span className={darkMode ? 'text-yellow-400' : 'text-yellow-700'}>
-                  $
-                </span>
+                                    $
+                                </span>
                                 <span className="pl-2">{entry.content}</span>
                             </div>
                         )}
@@ -221,8 +255,8 @@ const Terminal = () => {
                                     darkMode ? 'text-gray-100' : 'text-gray-800'
                                 }`}
                             >
-                {entry.content}
-              </pre>
+                                {entry.content}
+                            </pre>
                         )}
                         {entry.type === 'error' && (
                             <div className="text-red-500">{entry.content}</div>
@@ -230,17 +264,16 @@ const Terminal = () => {
                     </motion.div>
                 ))}
 
-                {/* Input */}
                 <div className="flex gap-2">
-          <span className={darkMode ? 'text-green-400' : 'text-green-700'}>
-            aladin@macOS
-          </span>
+                    <span className={darkMode ? 'text-green-400' : 'text-green-700'}>
+                        aladin@macOS
+                    </span>
                     <span className={darkMode ? 'text-blue-400' : 'text-blue-700'}>
-            ~
-          </span>
+                        ~
+                    </span>
                     <span className={darkMode ? 'text-yellow-400' : 'text-yellow-700'}>
-            $
-          </span>
+                        $
+                    </span>
                     <input
                         ref={inputRef}
                         type="text"

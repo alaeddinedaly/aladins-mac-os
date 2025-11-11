@@ -3,11 +3,13 @@ export interface AppWindow {
   title: string;
   icon: string;
   component: string;
+  position: { x: number; y: number };
+  size: { width: number; height: number };
   isOpen: boolean;
   isMinimized: boolean;
   isMaximized: boolean;
-  position: { x: number; y: number };
-  size: { width: number; height: number };
+  previousSize?: { width: number; height: number };
+  previousPosition?: { x: number; y: number };
   zIndex: number;
 }
 
