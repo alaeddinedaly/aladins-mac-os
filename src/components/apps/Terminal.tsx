@@ -98,7 +98,7 @@ const Terminal = () => {
             execute: (args: string[]) => [args.join(' ')]
         },
         ls: {
-            execute: () => ['Resume.pdf', 'Portfolio/', 'Projects/']
+            execute: () => ['Resume_en.pdf', 'Portfolio/', 'Projects/']
         }
     };
 

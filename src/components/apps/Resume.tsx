@@ -3,12 +3,12 @@ import { Download, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Resume = () => {
-  const resumeUrl = '/Resume.pdf'; // Path inside /public
+  const resumeUrl = '/Resume_en.pdf'; // Path inside /public
 
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = resumeUrl;
-    link.download = 'Resume.pdf';
+    link.download = 'Resume_en.pdf';
     link.click();
   };
 
