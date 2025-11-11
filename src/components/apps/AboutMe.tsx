@@ -9,8 +9,12 @@ const AboutMe = () => {
         animate={{ scale: 1, opacity: 1 }}
         className="text-center space-y-4"
       >
-        <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-6xl">
-          👨‍💻
+        <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-primary">
+          <img
+              src="/me.jpg"
+              alt="AlaEddine Daly"
+              className="w-full h-full object-cover"
+          />
         </div>
         <div>
           <h1 className="text-3xl font-bold">AlaEddine Daly</h1>
@@ -30,13 +34,18 @@ const AboutMe = () => {
         </motion.div>
 
         <motion.div
-          initial={{ x: -20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="flex items-center gap-3 p-3 rounded-lg bg-muted/30"
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center gap-3 p-3 rounded-lg bg-muted/30"
         >
           <Mail className="w-5 h-5 text-primary" />
-          <a href="mailto:dalyalaeddine@gmail.com" className="hover:text-primary transition-colors">
+          <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=dalyalaeddine@gmail.com&su=Hello%20AlaEddine&body=I%20found%20your%20portfolio%20and%20would%20like%20to%20connect..."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+          >
             dalyalaeddine@gmail.com
           </a>
         </motion.div>

@@ -72,7 +72,7 @@ const Dock = () => {
           onMouseLeave={() => mouseX.set(Infinity)}
       >
         <div
-            className="flex items-end gap-2 px-3 py-2 rounded-2xl glass dock-shadow"
+            className="flex items-end gap-3 px-6 py-4 rounded-2xl glass dock-shadow"
             style={{ backgroundColor: 'hsl(var(--macos-dock-bg))' }}
         >
           {dockApps.map((app) => (

@@ -17,8 +17,8 @@ import Photos from './apps/Photos';
 import Music from './apps/Music';
 import Settings from './apps/Settings';
 import Trash from './apps/Trash';
-import wallpaper from '@/assets/sonoma-wallpaper.jpg';
 import Terminal from "@/components/apps/Terminal.tsx";
+import WallpaperSettings from './apps/WallpaperSettings';
 
 // Empty Folder Component
 const EmptyFolder = () => {
@@ -115,6 +115,9 @@ interface ContextMenu {
 const Desktop = () => {
   const windows = useWindowStore((state) => state.windows);
   const openWindow = useWindowStore((state) => state.openWindow);
+
+  // Wallpaper state
+  const [wallpaper, setWallpaper] = useState('https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80');
 
   const [desktopItems, setDesktopItems] = useState<DesktopItem[]>([
     {
@@ -222,6 +225,12 @@ const Desktop = () => {
     openWindow('TextEditor');
   };
 
+  // Open wallpaper settings
+  const openWallpaperSettings = () => {
+    openWindow('wallpaper');
+    setContextMenu({ ...contextMenu, show: false });
+  };
+
   const renderWindowContent = (component: string, windowId: string) => {
     console.log('Rendering component:', component); // Debug log
     switch (component) {
@@ -257,6 +266,8 @@ const Desktop = () => {
         return <TextEditor windowId={windowId} />;
       case 'Terminal':
         return <Terminal />;
+      case 'WallpaperSettings':
+        return <WallpaperSettings currentWallpaper={wallpaper} onWallpaperChange={setWallpaper} />;
       default:
         console.log('Component not found:', component); // Debug log
         return <div>App not found: {component}</div>;
@@ -334,6 +345,7 @@ const Desktop = () => {
                 <span className="text-sm">Get Info</span>
               </button>
               <button
+                  onClick={openWallpaperSettings}
                   className="w-full px-4 py-2 text-left hover:bg-blue-500 hover:text-white flex items-center gap-3 transition-colors"
               >
                 <Image size={16} />

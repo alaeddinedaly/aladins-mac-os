@@ -1,14 +1,16 @@
 import { motion } from 'framer-motion';
-import { Sun, Moon, Palette, Volume2, Sparkles } from 'lucide-react';
+import { Sun, Moon, Palette, Volume2, Sparkles, Check } from 'lucide-react';
 import { useState } from 'react';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { useThemeStore } from '@/store/themeStore';
+import { useThemeStore, themeColors, type ThemeColor } from '@/store/themeStore';
 
 const Settings = () => {
   const { toast } = useToast();
   const darkMode = useThemeStore((state) => state.darkMode);
+  const themeColor = useThemeStore((state) => state.themeColor);
   const toggleDarkMode = useThemeStore((state) => state.toggleDarkMode);
+  const setThemeColor = useThemeStore((state) => state.setThemeColor);
   const [animations, setAnimations] = useState(true);
   const [sounds, setSounds] = useState(true);
 
@@ -17,6 +19,14 @@ const Settings = () => {
     toast({
       title: darkMode ? 'Light mode enabled' : 'Dark mode enabled',
       description: 'Theme has been updated',
+    });
+  };
+
+  const handleColorChange = (color: ThemeColor) => {
+    setThemeColor(color);
+    toast({
+      title: 'Theme color changed',
+      description: `Now using ${themeColors[color].name}`,
     });
   };
 
@@ -37,6 +47,8 @@ const Settings = () => {
             <Palette className="w-5 h-5 text-primary" />
             Appearance
           </h3>
+
+          {/* Dark Mode Toggle */}
           <div className="flex items-center justify-between p-4 rounded-lg bg-muted/30">
             <div className="flex items-center gap-3">
               {darkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
@@ -50,6 +62,37 @@ const Settings = () => {
             <Switch checked={darkMode} onCheckedChange={handleThemeToggle} />
           </div>
 
+          {/* Theme Color Picker */}
+          <div className="space-y-3">
+            <div className="text-sm font-medium">Theme Color</div>
+            <div className="grid grid-cols-4 gap-3">
+              {(Object.keys(themeColors) as ThemeColor[]).map((color, index) => (
+                  <motion.button
+                      key={color}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.05 }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleColorChange(color)}
+                      className={`relative aspect-square rounded-xl bg-gradient-to-br ${themeColors[color].gradient} shadow-lg flex items-center justify-center group overflow-hidden transition-all ${
+                          themeColor === color ? 'ring-2 ring-offset-2 ring-primary' : ''
+                      }`}
+                  >
+                    {themeColor === color && (
+                        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                          <Check className="w-6 h-6 text-white" />
+                        </div>
+                    )}
+                    <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-1.5 text-[10px] text-white text-center font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                      {themeColors[color].name}
+                    </div>
+                  </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Wallpaper Section */}
           <div className="space-y-3">
             <div className="text-sm font-medium">Wallpaper</div>
             <div className="grid grid-cols-2 gap-3">
@@ -112,6 +155,10 @@ const Settings = () => {
           <div className="flex justify-between">
             <span className="text-muted-foreground">Developer</span>
             <span className="font-medium">AlaEddine Daly</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Current Theme</span>
+            <span className="font-medium capitalize">{themeColors[themeColor].name}</span>
           </div>
         </div>
       </div>
