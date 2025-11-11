@@ -6,7 +6,7 @@ const Terminal = () => {
     const darkMode = useThemeStore((state) => state.darkMode);
     const [history, setHistory] = useState([
         { type: 'output', content: 'Last login: ' + new Date().toLocaleString() + ' on ttys000' },
-        { type: 'output', content: "Welcome to Aladin's Portfolio Terminal" },
+        { type: 'output', content: "Welcome to my Portfolio Terminal" },
         { type: 'output', content: 'Type "help" to see available commands\n' },
     ]);
     const [input, setInput] = useState('');
