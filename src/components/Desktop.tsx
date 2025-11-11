@@ -7,6 +7,14 @@ import Finder from './apps/Finder';
 import AboutMe from './apps/AboutMe';
 import TechStack from './apps/TechStack';
 import Resume from './apps/Resume';
+import Safari from './apps/Safari';
+import Calculator from './apps/Calculator';
+import Notes from './apps/Notes';
+import Calendar from './apps/Calendar';
+import Photos from './apps/Photos';
+import Music from './apps/Music';
+import Settings from './apps/Settings';
+import Trash from './apps/Trash';
 import wallpaper from '@/assets/sonoma-wallpaper.jpg';
 
 const Desktop = () => {
@@ -22,6 +30,22 @@ const Desktop = () => {
         return <TechStack />;
       case 'Resume':
         return <Resume />;
+      case 'Safari':
+        return <Safari />;
+      case 'Calculator':
+        return <Calculator />;
+      case 'Notes':
+        return <Notes />;
+      case 'Calendar':
+        return <Calendar />;
+      case 'Photos':
+        return <Photos />;
+      case 'Music':
+        return <Music />;
+      case 'Settings':
+        return <Settings />;
+      case 'Trash':
+        return <Trash />;
       default:
         return <div>App not found</div>;
     }

@@ -5,9 +5,17 @@ import { DockApp } from '@/types/apps';
 
 const dockApps: DockApp[] = [
   { id: 'finder', title: 'Projects', icon: '📁', component: 'Finder' },
+  { id: 'safari', title: 'Safari', icon: '🌐', component: 'Safari' },
   { id: 'about', title: 'About Me', icon: '👤', component: 'AboutMe' },
   { id: 'techstack', title: 'Tech Stack', icon: '💻', component: 'TechStack' },
   { id: 'resume', title: 'Resume', icon: '📄', component: 'Resume' },
+  { id: 'calculator', title: 'Calculator', icon: '🔢', component: 'Calculator' },
+  { id: 'notes', title: 'Notes', icon: '📝', component: 'Notes' },
+  { id: 'calendar', title: 'Calendar', icon: '📅', component: 'Calendar' },
+  { id: 'photos', title: 'Photos', icon: '🖼️', component: 'Photos' },
+  { id: 'music', title: 'Music', icon: '🎵', component: 'Music' },
+  { id: 'settings', title: 'Settings', icon: '⚙️', component: 'Settings' },
+  { id: 'trash', title: 'Trash', icon: '🗑️', component: 'Trash' },
 ];
 
 const DockIcon = ({ app, mouseX }: { app: DockApp; mouseX: MotionValue<number> }) => {
