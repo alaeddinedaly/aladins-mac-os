@@ -5,6 +5,7 @@ import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import { useThemeStore, themeColors, type ThemeColor } from '@/store/themeStore';
 
+
 const Settings = () => {
   const { toast } = useToast();
   const darkMode = useThemeStore((state) => state.darkMode);

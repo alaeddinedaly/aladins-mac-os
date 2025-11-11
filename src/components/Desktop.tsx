@@ -19,6 +19,7 @@ import Settings from './apps/Settings';
 import Trash from './apps/Trash';
 import Terminal from "@/components/apps/Terminal.tsx";
 import WallpaperSettings from './apps/WallpaperSettings';
+import { useThemeStore } from '@/store/themeStore';
 
 // Empty Folder Component
 const EmptyFolder = () => {
@@ -115,6 +116,7 @@ interface ContextMenu {
 const Desktop = () => {
   const windows = useWindowStore((state) => state.windows);
   const openWindow = useWindowStore((state) => state.openWindow);
+  const darkMode = useThemeStore((state) => state.darkMode);
 
   // Wallpaper state
   const [wallpaper, setWallpaper] = useState('https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80');
@@ -317,7 +319,11 @@ const Desktop = () => {
         {contextMenu.show && (
             <div
                 ref={contextMenuRef}
-                className="absolute bg-white/95 backdrop-blur-xl rounded-lg shadow-2xl border border-gray-200/50 py-2 min-w-[200px] z-[1000]"
+                className={`absolute backdrop-blur-xl rounded-lg shadow-2xl border py-2 min-w-[200px] z-[1000] transition-colors duration-200
+      ${darkMode
+                    ? 'bg-black/90 border-gray-700 text-white'
+                    : 'bg-white/95 border-gray-200 text-black'
+                }`}
                 style={{
                   left: contextMenu.x,
                   top: contextMenu.y,
@@ -325,34 +331,39 @@ const Desktop = () => {
             >
               <button
                   onClick={createNewFolder}
-                  className="w-full px-4 py-2 text-left hover:bg-blue-500 hover:text-white flex items-center gap-3 transition-colors"
+                  className="w-full px-4 py-2 text-left flex items-center gap-3 hover:bg-blue-500 hover:text-white transition-colors"
               >
                 <FolderPlus size={16} />
                 <span className="text-sm">New Folder</span>
               </button>
+
               <button
                   onClick={createNewFile}
-                  className="w-full px-4 py-2 text-left hover:bg-blue-500 hover:text-white flex items-center gap-3 transition-colors"
+                  className="w-full px-4 py-2 text-left flex items-center gap-3 hover:bg-blue-500 hover:text-white transition-colors"
               >
                 <FileText size={16} />
                 <span className="text-sm">New File</span>
               </button>
-              <div className="h-px bg-gray-200 my-2" />
+
+              <div className={`h-px my-2 ${darkMode ? 'bg-gray-700' : 'bg-gray-200'}`} />
+
               <button
-                  className="w-full px-4 py-2 text-left hover:bg-blue-500 hover:text-white flex items-center gap-3 transition-colors"
+                  className="w-full px-4 py-2 text-left flex items-center gap-3 hover:bg-blue-500 hover:text-white transition-colors"
               >
                 <Info size={16} />
                 <span className="text-sm">Get Info</span>
               </button>
+
               <button
                   onClick={openWallpaperSettings}
-                  className="w-full px-4 py-2 text-left hover:bg-blue-500 hover:text-white flex items-center gap-3 transition-colors"
+                  className="w-full px-4 py-2 text-left flex items-center gap-3 hover:bg-blue-500 hover:text-white transition-colors"
               >
                 <Image size={16} />
                 <span className="text-sm">Change Desktop Background</span>
               </button>
             </div>
         )}
+
 
         {/* Windows */}
         <div className="absolute inset-0 top-7">
