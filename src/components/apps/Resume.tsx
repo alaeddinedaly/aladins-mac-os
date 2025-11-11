@@ -111,6 +111,7 @@ const Resume = () => {
 
             <div>
               <h4 className="font-medium text-primary">Freelancer – Custom Development</h4>
+              <p className="text-sm text-muted-foreground">2025 – Present</p>
               <ul className="list-disc ml-5 text-sm text-foreground/80 mt-2 space-y-1">
                 <li>
                   Built custom web and mobile applications integrating AI features such as chatbots,
