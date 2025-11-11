@@ -71,7 +71,7 @@ const AboutMe = () => {
         <p className="text-center text-sm text-muted-foreground mb-4">Connect with me</p>
         <div className="flex justify-center gap-4">
           <a
-            href="https://github.com"
+            href="https://github.com/alaeddinedaly"
             target="_blank"
             rel="noopener noreferrer"
             className="p-3 rounded-full bg-muted/30 hover:bg-primary/20 transition-all hover:scale-110"
@@ -79,7 +79,7 @@ const AboutMe = () => {
             <Github className="w-5 h-5" />
           </a>
           <a
-            href="https://linkedin.com"
+            href="https://linkedin.com/in/daly-ala-eddine"
             target="_blank"
             rel="noopener noreferrer"
             className="p-3 rounded-full bg-muted/30 hover:bg-primary/20 transition-all hover:scale-110"

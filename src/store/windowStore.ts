@@ -110,6 +110,14 @@ const defaultApps: Omit<AppWindow, 'isOpen' | 'isMinimized' | 'isMaximized' | 'z
     position: { x: 280, y: 140 },
     size: { width: 650, height: 500 },
   },
+  {
+    id: 'terminal',
+    title: 'Terminal',
+    icon: '⌨️',
+    component: 'Terminal',
+    position: { x: 170, y: 110 },
+    size: { width: 800, height: 550 },
+  }
 ];
 
 export const useWindowStore = create<WindowStore>((set) => ({
