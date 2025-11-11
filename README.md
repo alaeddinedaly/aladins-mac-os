@@ -1,73 +1,92 @@
-# Welcome to your Lovable project
+# macOS AI Developer Portfolio
 
-## Project info
+A **fully interactive macOS-inspired portfolio** for **AlaEddine Daly (Aladin)**, a Full-Stack Developer from Tunisia.  
+This portfolio replicates the look and feel of **macOS Sonoma**, providing visitors with an immersive desktop experience while showcasing projects, skills, and contact info. Built with modern web technologies, it also includes an **AI-powered terminal** and multiple functional macOS-style apps.
 
-**URL**: https://lovable.dev/projects/6ac60554-4daf-438c-800d-73eaa80c1afd
+---
 
-## How can I edit this code?
+## 🌟 Features
 
-There are several ways of editing your application.
+- **Pixel-perfect macOS UI**
+    - Top menu bar with dynamic, clickable menus
+    - Dock with macOS bounce, magnification, and active indicators
+    - Desktop with official macOS wallpaper or gradient equivalent
 
-**Use Lovable**
+- **Interactive macOS-style apps**
+    - **Finder** → View projects with categories (AI, Web, Mobile, Tools)
+    - **About Me** → Bio, social links, contact info
+    - **Tech Stack** → Interactive grid with tooltips
+    - **Resume Viewer** → Embedded PDF with macOS Preview-style toolbar
+    - **AI Terminal** → Command-line interface powered by OpenAI/Gemini API
+    - **Mail App** → Contact form styled like Apple Mail
+    - **Extra apps**: Safari, Calculator, Notes, Calendar, Photos, Music, Trash, System Preferences
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/6ac60554-4daf-438c-800d-73eaa80c1afd) and start prompting.
+- **Animations & Interactions**
+    - Smooth window transitions, dock magnification, shadows, and blur effects
+    - Drag-and-drop desktop icons and resizable windows
+    - Startup boot animation with macOS-style chime
+    - Light/Dark mode toggle with live transitions
+    - Dynamic local time and responsive UI
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Realistic macOS experience**
+    - Fully draggable and resizable windows
+    - Minimize/maximize/close buttons function like macOS
+    - System sounds for notifications, opening/minimizing apps
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🛠️ Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Frontend:** Next.js (App Router), React, Tailwind CSS
+- **Animations:** Framer Motion, GSAP/Lottie
+- **State Management:** Zustand or Recoil for window and app state
+- **AI Integration:** OpenAI/Gemini API for AI Terminal
+- **Others:** Shadcn/UI for macOS-style controls and modals, JavaScript Date API for real-time clock
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 📚 Projects
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Here are some of the highlighted projects included in the portfolio:
 
-# Step 3: Install the necessary dependencies.
-npm i
+- **LynkAi**: Web application with JWT authentication built with Angular and Spring Boot, featuring a RAG model for intelligent document Q&A and AI-powered summary generation.  
+  *Tech:* Angular · Spring Boot · RAG · JWT · AI/ML
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+- **AI Storyboard Generator**: Generates 1024×1024 storyboard images from scripts using a custom-trained VGG-inspired CNN and SDXL diffusion pipeline.  
+  *Tech:* Python · AI/ML · Computer Vision
 
-**Edit a file directly in GitHub**
+- **Nexus Down**: Download manager with infinite retry mechanism and parallel downloads.  
+  *Tech:* Python · Automation · File Management
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- **Secure File Service**: Cloud storage service with JWT authentication and encrypted file storage.  
+  *Tech:* Kotlin · Security · File Management
 
-**Use GitHub Codespaces**
+- **Finora**: Financial management mobile app for expense tracking, budgeting, and insights.  
+  *Tech:* React Native · Expo · PostgreSQL
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **OCR Application**: Intelligent document scanner with Tesseract OCR and Gemini API enhancements.  
+  *Tech:* HTML · JavaScript · OCR · Computer Vision
 
-## What technologies are used for this project?
+- **Portfolio Website**: Modern responsive portfolio with smooth animations and dark theme.  
+  *Tech:* Next.js · React · Tailwind CSS · Framer Motion
 
-This project is built with:
+- **FlameBot**: Conversational AI chatbot powered by Google Gemini API.  
+  *Tech:* JavaScript · Gemini AI · Chatbot
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Restaurant Management App**: Full restaurant system with inventory and order management.  
+  *Tech:* Java · Swing · SQL · JDBC
 
-## How can I deploy this project?
+- **2D Shooter Game**: Action-packed 2D game with multiple levels.  
+  *Tech:* Unity · C# · Game Development
 
-Simply open [Lovable](https://lovable.dev/projects/6ac60554-4daf-438c-800d-73eaa80c1afd) and click on Share -> Publish.
+- **Zipit**: GUI app for compressing and extracting ZIP archives.  
+  *Tech:* Python · Tkinter · Zipfile
 
-## Can I connect a custom domain to my Lovable project?
+---
 
-Yes, you can!
+## 🚀 Getting Started
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/alaeddinedaly/aladins-mac-os.git
+   cd aladins-mac-os
