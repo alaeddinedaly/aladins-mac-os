@@ -4,9 +4,10 @@ import { useWindowStore } from '@/store/windowStore';
 import { DockApp } from '@/types/apps';
 
 const dockApps: DockApp[] = [
-  { id: 'finder', title: 'Projects', icon: 'finder.png', component: 'Finder' },
+
+  { id: 'about', title: 'About Me', icon: 'finder.png', component: 'AboutMe' },
   { id: 'safari', title: 'Safari', icon: 'safari.png', component: 'Safari' },
-  { id: 'about', title: 'About Me', icon: 'contacts.png', component: 'AboutMe' },
+  { id: 'finder', title: 'Projects', icon: 'contacts.png', component: 'Finder' },
   { id: 'terminal', title: 'Terminal', icon: 'terminal.png', component: 'Terminal' },
   { id: 'techstack', title: 'Tech Stack', icon: 'developer.png', component: 'TechStack' },
   { id: 'resume', title: 'Resume', icon: 'pages.png', component: 'Resume' },
