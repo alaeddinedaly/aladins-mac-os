@@ -51,12 +51,13 @@ const Index = () => {
     }, 600);
   };
 
-  const handleDragStart = (clientY) => {
+  const handleDragStart = (clientY: number) => {
     if (isAnimating) return;
     startY.current = clientY;
     setIsDragging(true);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleDragMove = (clientY) => {
     if (!isDragging || isAnimating) return;
     const offset = Math.min(0, clientY - startY.current);

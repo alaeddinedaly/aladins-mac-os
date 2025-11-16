@@ -5,16 +5,16 @@ import { Upload, Check } from 'lucide-react';
 // Predefined wallpaper options
 const WALLPAPER_OPTIONS = [
     {
-        id: 'sonoma',
-        name: 'Sonoma',
-        url: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80',
-        thumbnail: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400&q=80'
-    },
-    {
         id: 'mountain',
         name: 'Mountain',
         url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80',
         thumbnail: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80'
+    },
+    {
+        id: 'sonoma',
+        name: 'Sonoma',
+        url: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80',
+        thumbnail: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400&q=80'
     },
     {
         id: 'ocean',

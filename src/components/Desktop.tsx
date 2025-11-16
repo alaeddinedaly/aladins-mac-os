@@ -162,6 +162,14 @@ const Desktop = () => {
     setSelectedItem(null);
   };
 
+  const handleAppClick = (appId: string) => {
+    if (appId === 'github' || appId === 'Github') {  // Check both cases
+      window.open('https://github.com/alaeddinedaly', '_blank');
+      return;
+    }
+    openWindow(appId);
+  };
+
   // Handle clicks outside context menu
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -188,9 +196,9 @@ const Desktop = () => {
   // Handle desktop item double-click
   const handleItemDoubleClick = (e: React.MouseEvent, item: DesktopItem) => {
     e.stopPropagation();
-    console.log('Opening window for:', item.appId || item.component);
-    // Use appId if available (for predefined apps), otherwise use component name
-    openWindow(item.appId || item.component);
+    const appId = item.appId || item.component;
+    console.log('Opening window for:', appId);
+    handleAppClick(appId);  // Changed from openWindow to handleAppClick
   };
 
   // Create new folder
@@ -264,6 +272,9 @@ const Desktop = () => {
         return <Trash />;
       case 'EmptyFolder':
         return <EmptyFolder />;
+      case 'Github':
+        window.open('https://github.com/alaeddinedaly', '_blank');
+        break;
       case 'TextEditor':
         return <TextEditor windowId={windowId} />;
       case 'Terminal':
@@ -374,7 +385,7 @@ const Desktop = () => {
           ))}
         </div>
 
-        <Dock />
+        <Dock onAppClick={handleAppClick} />
       </div>
   );
 };

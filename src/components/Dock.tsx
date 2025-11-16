@@ -4,24 +4,27 @@ import { useWindowStore } from '@/store/windowStore';
 import { DockApp } from '@/types/apps';
 
 const dockApps: DockApp[] = [
-
   { id: 'about', title: 'About Me', icon: 'finder.png', component: 'AboutMe' },
   { id: 'safari', title: 'Safari', icon: 'safari.png', component: 'Safari' },
-  { id: 'finder', title: 'Projects', icon: 'contacts.png', component: 'Finder' },
+  { id: 'finder', title: 'Projects', icon: 'projects.png', component: 'Finder' },
   { id: 'terminal', title: 'Terminal', icon: 'terminal.png', component: 'Terminal' },
-  { id: 'techstack', title: 'Tech Stack', icon: 'developer.png', component: 'TechStack' },
+  { id: 'techstack', title: 'Tech Stack', icon: 'techstack.png', component: 'TechStack' },
   { id: 'resume', title: 'Resume', icon: 'pages.png', component: 'Resume' },
   { id: 'calculator', title: 'Calculator', icon: 'calculator.png', component: 'Calculator' },
   { id: 'notes', title: 'Notes', icon: 'notes.png', component: 'Notes' },
   { id: 'calendar', title: 'Calendar', icon: 'calendar.png', component: 'Calendar' },
-  { id: 'photos', title: 'Photos', icon: 'photos.png', component: 'Photos' },
+  { id: 'photos', title: 'Photos', icon: 'photos.avif', component: 'Photos' },
   { id: 'music', title: 'Music', icon: 'music.png', component: 'Music' },
   { id: 'settings', title: 'Settings', icon: 'settings.png', component: 'Settings' },
+  { id: 'github', title: 'Github', icon: 'github.png', component: '' },
   { id: 'trash', title: 'Trash', icon: 'trash.png', component: 'Trash' },
-
 ];
 
-const DockIcon = ({ app, mouseX }: { app: DockApp; mouseX: MotionValue<number> }) => {
+const DockIcon = ({app, mouseX, onAppClick}: {
+  app: DockApp,
+  mouseX: MotionValue<number>,
+  onAppClick?: (appId: string) => void
+}) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const distance = useTransform(mouseX, (val) => {
@@ -36,6 +39,14 @@ const DockIcon = ({ app, mouseX }: { app: DockApp; mouseX: MotionValue<number> }
   const windows = useWindowStore((state) => state.windows);
   const isActive = windows.some((w) => w.id === app.id && w.isOpen);
 
+  const handleClick = () => {
+    if (onAppClick) {
+      onAppClick(app.id);
+    } else {
+      openWindow(app.id);
+    }
+  };
+
   return (
       <motion.div
           ref={ref}
@@ -43,7 +54,7 @@ const DockIcon = ({ app, mouseX }: { app: DockApp; mouseX: MotionValue<number> }
           className="relative flex items-end justify-center"
           whileHover={{ y: -10 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => openWindow(app.id)}
+          onClick={handleClick}
       >
         <div className="relative cursor-pointer">
           <img
@@ -60,7 +71,7 @@ const DockIcon = ({ app, mouseX }: { app: DockApp; mouseX: MotionValue<number> }
   );
 };
 
-const Dock = () => {
+const Dock = ({ onAppClick }: { onAppClick?: (appId: string) => void }) => {
   const mouseX = useMotionValue(Infinity);
 
   return (
@@ -77,7 +88,7 @@ const Dock = () => {
             style={{ backgroundColor: 'hsl(var(--macos-dock-bg))' }}
         >
           {dockApps.map((app) => (
-              <DockIcon key={app.id} app={app} mouseX={mouseX} />
+              <DockIcon key={app.id} app={app} mouseX={mouseX} onAppClick={onAppClick} />
           ))}
         </div>
       </motion.div>
