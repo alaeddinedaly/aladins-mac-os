@@ -128,16 +128,45 @@ const defaultApps: Omit<AppWindow, 'isOpen' | 'isMinimized' | 'isMaximized' | 'z
   }
 ];
 
+// Custom positions for auto-opened windows
+const getCustomPosition = (appId: string, appTemplate: any) => {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const padding = 50; // Padding from edges
+
+  switch (appId) {
+    case 'terminal':
+      // Top left position
+      return {
+        x: padding,
+        y: padding + 30 // Extra padding for menubar
+      };
+    case 'resume':
+      // Top right position
+      return {
+        x: viewportWidth - appTemplate.size.width - padding,
+        y: padding + 30
+      };
+    default:
+      // Default centered position
+      return {
+        x: (viewportWidth - appTemplate.size.width) / 2,
+        y: (viewportHeight - appTemplate.size.height) / 2,
+      };
+  }
+};
+
 export const useWindowStore = create<WindowStore>((set) => ({
   windows: [],
   highestZIndex: 1,
   openWindow: (appId: string) =>
       set((state) => {
         const existingWindow = state.windows.find((w) => w.id === appId);
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
 
         if (existingWindow) {
+          const appTemplate = defaultApps.find((a) => a.id === appId);
+          const customPosition = appTemplate ? getCustomPosition(appId, appTemplate) : existingWindow.position;
+
           return {
             windows: state.windows.map((w) =>
                 w.id === appId
@@ -146,10 +175,7 @@ export const useWindowStore = create<WindowStore>((set) => ({
                       isOpen: true,
                       isMinimized: false,
                       zIndex: state.highestZIndex + 1,
-                      position: {
-                        x: (viewportWidth - w.size.width) / 2,
-                        y: (viewportHeight - w.size.height) / 2,
-                      },
+                      position: customPosition,
                     }
                     : w
             ),
@@ -160,10 +186,7 @@ export const useWindowStore = create<WindowStore>((set) => ({
         const appTemplate = defaultApps.find((a) => a.id === appId);
         if (!appTemplate) return state;
 
-        const centeredPosition = {
-          x: (viewportWidth - appTemplate.size.width) / 2,
-          y: (viewportHeight - appTemplate.size.height) / 2,
-        };
+        const customPosition = getCustomPosition(appId, appTemplate);
 
         return {
           windows: [
@@ -174,7 +197,7 @@ export const useWindowStore = create<WindowStore>((set) => ({
               isMinimized: false,
               isMaximized: false,
               zIndex: state.highestZIndex + 1,
-              position: centeredPosition,
+              position: customPosition,
             },
           ],
           highestZIndex: state.highestZIndex + 1,

@@ -121,6 +121,17 @@ const Desktop = () => {
   // Wallpaper state
   const [wallpaper, setWallpaper] = useState('https://images.unsplash.com/photo-1557683316-973673baf926?w=1920&q=80');
 
+  // ✨ Auto-open windows on mount with custom positions
+  useEffect(() => {
+    // Small delay to ensure the windows open with proper positioning
+    const timer = setTimeout(() => {
+      openWindow('terminal');
+      openWindow('resume');
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array means this runs once on mount
+
   const [desktopItems, setDesktopItems] = useState<DesktopItem[]>([
     {
       id: '1',
@@ -310,7 +321,7 @@ const Desktop = () => {
                 style={{
                   left: item.position.x,
                   top: item.position.y,
-                  zIndex: 10
+                  zIndex: 1
                 }}
                 onClick={(e) => handleItemClick(e, item)}
                 onDoubleClick={(e) => handleItemDoubleClick(e, item)}
