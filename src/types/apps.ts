@@ -27,4 +27,7 @@ export interface Project {
   tech: string[];
   link?: string;
   category: string;
+  readme: string;
+  githubUrl ?: string;
+  liveUrl ?: string;
 }
