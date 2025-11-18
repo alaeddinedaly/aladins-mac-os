@@ -138,7 +138,7 @@ const getCustomPosition = (appId: string, appTemplate: any) => {
     case 'terminal':
       // Top left position
       return {
-        x: padding,
+        x: padding + 160 ,
         y: padding + 30 // Extra padding for menubar
       };
     case 'resume':
