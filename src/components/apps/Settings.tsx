@@ -31,12 +31,6 @@ const Settings = () => {
     });
   };
 
-  const wallpapers = [
-    { id: '1', name: 'Sonoma', gradient: 'from-purple-500 via-pink-500 to-orange-500' },
-    { id: '2', name: 'Ocean', gradient: 'from-blue-500 via-cyan-500 to-teal-500' },
-    { id: '3', name: 'Forest', gradient: 'from-green-500 via-emerald-500 to-teal-500' },
-    { id: '4', name: 'Sunset', gradient: 'from-orange-500 via-red-500 to-pink-500' },
-  ];
 
   return (
       <div className="space-y-6">
@@ -93,26 +87,6 @@ const Settings = () => {
             </div>
           </div>
 
-          {/* Wallpaper Section */}
-          <div className="space-y-3">
-            <div className="text-sm font-medium">Wallpaper</div>
-            <div className="grid grid-cols-2 gap-3">
-              {wallpapers.map((wallpaper, index) => (
-                  <motion.div
-                      key={wallpaper.id}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.05 }}
-                      whileHover={{ scale: 1.05 }}
-                      className={`aspect-video rounded-lg bg-gradient-to-br ${wallpaper.gradient} cursor-pointer shadow-lg flex items-center justify-center text-white font-semibold`}
-                  >
-                    {wallpaper.name}
-                  </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Accessibility */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold flex items-center gap-2">
@@ -163,6 +137,7 @@ const Settings = () => {
           </div>
         </div>
       </div>
+    </div>
   );
 };
 

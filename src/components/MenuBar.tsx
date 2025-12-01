@@ -6,41 +6,72 @@ import { useWindowStore } from '@/store/windowStore';
 // Motivation Letter Component (to be used in your window)
 export const MotivationLetter = () => {
   return (
-      <div className="prose prose-sm dark:prose-invert max-w-none">
-        <h1 className="text-2xl font-bold mb-4">Motivation Letter</h1>
+      <div className="max-w-none p-8">
+        {/* Header with contact info */}
+        <div className="flex justify-between items-start mb-8 text-sm">
+          {/* Left - My info */}
+          <div className="space-y-0.5">
+            <p className="font-semibold">Alaa Eddine Daly</p>
+            <p>Sousse, Tunisie</p>
+            <p>+216 58 247 509</p>
+            <p>dalyalaeddine@gmail.com</p>
+          </div>
+
+          {/* Right - Company info */}
+          <div className="space-y-0.5 text-right">
+            <p className="font-semibold">Webnet</p>
+            <p>55 rue de Luxembourg, Lille Europe</p>
+            <p>contact@webnet.fr</p>
+          </div>
+        </div>
+
+        {/* Date centered */}
+        <div className="text-center mb-8">
+          <p className="text-sm">LE 12/10/2025</p>
+        </div>
+
+        {/* Letter content */}
         <div className="space-y-4 text-foreground/90">
+          <h1 className="text-lg font-bold mb-6">Candidature pour le poste de Développeur Web Java</h1>
+
           <p className="leading-relaxed">
-            Dear Hiring Manager,
+            Madame, Monsieur,
           </p>
+
           <p className="leading-relaxed">
-            I am writing to express my strong interest in the software development position at your company.
-            With a passion for creating innovative solutions and a solid foundation in modern web technologies,
-            I am excited about the opportunity to contribute to your team.
+            Actuellement étudiant en 3ème année à l'ISITCOM, je recherche une opportunité professionnelle
+            afin de mettre en application mes compétences acquises durant mon parcours universitaire.
+            Rejoindre votre équipe dynamique me permettrait d'approfondir mes connaissances en développement
+            backend, architectures modernes et bonnes pratiques Java.
           </p>
+
           <p className="leading-relaxed">
-            Throughout my career, I have developed expertise in React, TypeScript, and various frontend
-            frameworks, creating intuitive and performant user interfaces. My experience includes building
-            complex state management systems, implementing responsive designs, and optimizing application
-            performance.
+            Votre annonce pour ce poste correspond parfaitement à ma recherche et à mes attentes, notamment
+            par les technologies maîtrisées telles que Java, Spring Boot, PostgreSQL, MySQL, Angular,
+            JavaScript/TypeScript, Git, CI/CD, conception orientée objet et méthodologies modernes. Grâce
+            à divers projets académiques, freelances et personnels, j'ai pu développer de solides
+            compétences techniques et être à l'aise avec les méthodes demandées dans l'offre. J'ai
+            également acquis des qualités personnelles indispensables : autonomie, esprit d'analyse, sens
+            du challenge, travail d'équipe, créativité et patience.
           </p>
+
           <p className="leading-relaxed">
-            What sets me apart is my dedication to writing clean, maintainable code and my commitment to
-            continuous learning. I stay current with industry trends and best practices, always seeking to
-            improve my skills and deliver exceptional results.
+            Intégrer votre entreprise serait une opportunité pour bénéficier de votre expertise et
+            continuer à progresser dans un cadre stimulant. Je suis motivé par l'envie d'apprendre et de
+            contribuer activement à vos projets informatiques, au sein d'une société reconnue pour son
+            excellence technique. Disponible immédiatement, je serais ravi d'échanger davantage lors d'un
+            entretien à votre convenance.
           </p>
+
           <p className="leading-relaxed">
-            I am particularly drawn to your company's mission and values, and I believe my technical skills
-            and collaborative approach would make me a valuable addition to your team. I am eager to bring
-            my expertise to challenging projects and contribute to your company's success.
+            En espérant une réponse favorable de votre part, veuillez agréer, Madame, Monsieur,
+            l'expression de mes salutations distinguées.
           </p>
-          <p className="leading-relaxed">
-            Thank you for considering my application. I look forward to the opportunity to discuss how I
-            can contribute to your team.
-          </p>
-          <p className="leading-relaxed">
-            Best regards,<br />
-            <span className="font-semibold">AlaEddine Daly</span>
-          </p>
+
+          {/* Signature bottom right */}
+          <div className="mt-12 text-right">
+            <p className="font-semibold">Alaa Eddine Daly</p>
+          </div>
         </div>
       </div>
   );
