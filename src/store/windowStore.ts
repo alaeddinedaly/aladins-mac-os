@@ -125,6 +125,22 @@ const defaultApps: Omit<AppWindow, 'isOpen' | 'isMinimized' | 'isMaximized' | 'z
     component: 'WallpaperSettings',
     position: { x: 200, y: 120 },
     size: { width: 600, height: 650 },
+  },
+  {
+    id: 'motivation-letter',
+    title: 'Motivation Letter',
+    icon: '📄',
+    component: 'MotivationLetter',
+    position: { x: 150, y: 100 },
+    size: { width: 700, height: 600 },
+  },
+  {
+    id: 'resume-video',
+    title: 'Resume Video',
+    icon: '🎬',
+    component: 'ResumeVideo',
+    position: { x: 200, y: 120 },
+    size: { width: 800, height: 550 },
   }
 ];
 

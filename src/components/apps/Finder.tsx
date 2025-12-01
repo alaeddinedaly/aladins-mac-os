@@ -479,7 +479,7 @@ const Finder = () => {
   return (
       <div className="flex h-full">
         {/* Left Sidebar - Project List */}
-        <div className={`${selectedProject ? 'w-80 border-r border-border/30' : 'w-full'} overflow-y-auto transition-all duration-300`}>
+        <div className={`${selectedProject ? 'w-80 border-r border-border/30' : 'w-full'} overflow-y-auto macos-scrollbar transition-all duration-300`}>
           <div className="p-4 space-y-3">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">My Projects</h2>
@@ -538,7 +538,7 @@ const Finder = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  className="flex-1 overflow-y-auto"
+                  className="flex-1 overflow-y-auto macos-scrollbar"
               >
                 <div className="p-6">
                   {/* Header */}

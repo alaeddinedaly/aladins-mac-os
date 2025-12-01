@@ -20,6 +20,7 @@ import Trash from './apps/Trash';
 import Terminal from "@/components/apps/Terminal.tsx";
 import WallpaperSettings from './apps/WallpaperSettings';
 import { useThemeStore } from '@/store/themeStore';
+import { MotivationLetter, ResumeVideo } from './MenuBar';
 
 // Empty Folder Component
 const EmptyFolder = () => {
@@ -178,6 +179,10 @@ const Desktop = () => {
       window.open('https://github.com/alaeddinedaly', '_blank');
       return;
     }
+    if (appId === 'linkedin' || appId === 'Linkedin') {  // Check both cases
+      window.open('https://linkedin.com/in/daly-ala-eddine', '_blank');
+      return;
+    }
     openWindow(appId);
   };
 
@@ -283,6 +288,10 @@ const Desktop = () => {
         return <Trash />;
       case 'EmptyFolder':
         return <EmptyFolder />;
+      case 'MotivationLetter':
+        return <MotivationLetter />;
+      case 'ResumeVideo':
+        return <ResumeVideo />;
       case 'Github':
         window.open('https://github.com/alaeddinedaly', '_blank');
         break;

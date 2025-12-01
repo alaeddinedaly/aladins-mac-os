@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, Plus, Trash2 } from 'lucide-react';
+import { Save, Plus, Trash2, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface Note {
@@ -10,31 +10,88 @@ interface Note {
   date: Date;
 }
 
-const Notes = () => {
-  const initialNotes: Note[] = [
-    {
-      id: '1',
-      title: 'Welcome Note',
-      content: 'This is a simple notes app. Click + to create a new note!',
-      date: new Date(),
-    },
-  ];
+const NOTES_STORAGE_KEY = 'portfolio-notes';
 
-  const [notes, setNotes] = useState<Note[]>(initialNotes);
-  const [activeNote, setActiveNote] = useState<Note | null>(initialNotes[0]);
-  const [content, setContent] = useState(initialNotes[0].content);
-  const [title, setTitle] = useState(initialNotes[0].title);
+const defaultNotes: Note[] = [
+  {
+    id: '1',
+    title: 'Welcome Note',
+    content: 'This is a simple notes app. Click + to create a new note!',
+    date: new Date(),
+  },
+];
+
+const deserializeNotes = (raw: string | null): Note[] => {
+  if (!raw) return defaultNotes;
+  try {
+    const parsed = JSON.parse(raw) as Array<Omit<Note, 'date'> & { date: string }>;
+    return parsed.map((note) => ({
+      ...note,
+      date: new Date(note.date),
+    }));
+  } catch (error) {
+    console.warn('Failed to parse stored notes, falling back to defaults.', error);
+    return defaultNotes;
+  }
+};
+
+const useStoredNotes = () => {
+  const loadNotes = () => {
+    if (typeof window === 'undefined') return defaultNotes;
+    const stored = localStorage.getItem(NOTES_STORAGE_KEY);
+    return deserializeNotes(stored);
+  };
+  return useState<Note[]>(loadNotes);
+};
+
+const Notes = () => {
+  const [notes, setNotes] = useStoredNotes();
+  const [activeNoteId, setActiveNoteId] = useState<string | null>(() => {
+    const primaryCollection = typeof window === 'undefined'
+      ? defaultNotes
+      : deserializeNotes(localStorage.getItem(NOTES_STORAGE_KEY));
+    return primaryCollection[0]?.id ?? null;
+  });
+  const activeNote = useMemo(
+    () => notes.find((note) => note.id === activeNoteId) ?? null,
+    [notes, activeNoteId],
+  );
+  const [content, setContent] = useState(activeNote?.content ?? '');
+  const [title, setTitle] = useState(activeNote?.title ?? '');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Update unsaved changes indicator
   useEffect(() => {
     if (activeNote) {
       const hasChanges =
-          title !== activeNote.title ||
-          content !== activeNote.content;
+        title !== activeNote.title ||
+        content !== activeNote.content;
       setHasUnsavedChanges(hasChanges);
+    } else {
+      setHasUnsavedChanges(false);
     }
   }, [title, content, activeNote]);
+
+  useEffect(() => {
+    if (activeNote) {
+      setTitle(activeNote.title);
+      setContent(activeNote.content);
+    } else {
+      setTitle('');
+      setContent('');
+    }
+  }, [activeNote?.id]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const payload = JSON.stringify(
+      notes.map((note) => ({
+        ...note,
+        date: note.date.toISOString(),
+      })),
+    );
+    localStorage.setItem(NOTES_STORAGE_KEY, payload);
+  }, [notes]);
 
   const handleNewNote = () => {
     const newNote: Note = {
@@ -44,9 +101,7 @@ const Notes = () => {
       date: new Date(),
     };
     setNotes([newNote, ...notes]);
-    setActiveNote(newNote);
-    setTitle(newNote.title);
-    setContent(newNote.content);
+    setActiveNoteId(newNote.id);
     setHasUnsavedChanges(false);
   };
 
@@ -60,13 +115,6 @@ const Notes = () => {
     );
 
     setNotes(updatedNotes);
-
-    // Update active note to reflect saved state
-    const updatedActiveNote = updatedNotes.find(n => n.id === activeNote.id);
-    if (updatedActiveNote) {
-      setActiveNote(updatedActiveNote);
-    }
-
     setHasUnsavedChanges(false);
   };
 
@@ -76,19 +124,27 @@ const Notes = () => {
     const filtered = notes.filter((note) => note.id !== activeNote.id);
     setNotes(filtered);
 
-    // Select the next note or null if no notes left
     const nextNote = filtered[0] || null;
-    setActiveNote(nextNote);
+    setActiveNoteId(nextNote?.id ?? null);
     setTitle(nextNote?.title || '');
     setContent(nextNote?.content || '');
     setHasUnsavedChanges(false);
   };
 
   const handleSelectNote = (note: Note) => {
-    setActiveNote(note);
+    setActiveNoteId(note.id);
     setTitle(note.title);
     setContent(note.content);
     setHasUnsavedChanges(false);
+  };
+
+  const handleShare = () => {
+    if (!activeNote) return;
+    const subject = encodeURIComponent(`Note: ${activeNote.title || 'Untitled'}`);
+    const body = encodeURIComponent(
+      `${activeNote.content || 'Shared from my macOS portfolio.'}\n\n— Sent via Notes app preview`,
+    );
+    window.open(`mailto:dalyalaeddine@gmail.com?subject=${subject}&body=${body}`, '_blank');
   };
 
   return (
@@ -99,7 +155,7 @@ const Notes = () => {
             <Plus className="w-4 h-4" />
             New Note
           </Button>
-          <div className="space-y-1 overflow-y-auto" style={{ maxHeight: 'calc(100% - 48px)' }}>
+          <div className="space-y-1 overflow-y-auto overflow-x-hidden macos-scrollbar" style={{ maxHeight: 'calc(100% - 48px)' }}>
             <AnimatePresence>
               {notes.map((note) => (
                   <motion.div
@@ -139,9 +195,9 @@ const Notes = () => {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Start typing..."
-                  className="flex-1 w-full bg-transparent border-none outline-none focus:outline-none resize-none"
+                  className="flex-1 w-full bg-transparent border-none outline-none focus:outline-none resize-none macos-scrollbar"
               />
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Button
                     onClick={handleSave}
                     size="sm"
@@ -150,6 +206,16 @@ const Notes = () => {
                 >
                   <Save className="w-4 h-4" />
                   Save
+                </Button>
+                <Button
+                    onClick={handleShare}
+                    variant="secondary"
+                    size="sm"
+                    className="gap-2"
+                    disabled={!activeNote}
+                >
+                  <Share2 className="w-4 h-4" />
+                  Share
                 </Button>
                 <Button
                     onClick={handleDelete}

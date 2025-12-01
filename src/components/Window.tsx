@@ -103,7 +103,7 @@ const Window = ({ window, children }: WindowProps) => {
           )}
 
           {/* 🖥 Content Area */}
-          <div className={`flex-1 ${isTerminal ? 'p-0' : 'p-6 overflow-auto'}`}>
+          <div className={`flex-1 ${isTerminal ? 'p-0' : 'p-6 overflow-auto macos-scrollbar'}`}>
             {children}
           </div>
         </motion.div>

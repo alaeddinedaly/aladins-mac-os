@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useThemeStore } from '@/store/themeStore';
+import { useThemeStore, themeColors, type ThemeColor } from '@/store/themeStore';
 import { useWindowStore } from '@/store/windowStore';
 import { X, Minus, Maximize2 } from 'lucide-react';
 
@@ -11,7 +11,9 @@ interface HistoryEntry {
 
 const Terminal = () => {
     const darkMode = useThemeStore((state) => state.darkMode);
-    const { closeWindow, minimizeWindow, maximizeWindow } = useWindowStore();
+    const toggleDarkMode = useThemeStore((state) => state.toggleDarkMode);
+    const setThemeColor = useThemeStore((state) => state.setThemeColor);
+    const { closeWindow, minimizeWindow, maximizeWindow, openWindow } = useWindowStore();
 
     const [history, setHistory] = useState<HistoryEntry[]>([
         { type: 'output', content: 'Last login: ' + new Date().toLocaleString() + ' on ttys000' },
@@ -22,7 +24,20 @@ const Terminal = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const terminalRef = useRef<HTMLDivElement>(null);
 
-    const commands: Record<string, { execute: (args?: string[]) => string[] | null }> = {
+    const appAlias: Record<string, { id: string; label: string }> = {
+        finder: { id: 'finder', label: 'Finder' },
+        projects: { id: 'finder', label: 'Projects' },
+        notes: { id: 'notes', label: 'Notes' },
+        resume: { id: 'resume', label: 'Resume' },
+        safari: { id: 'safari', label: 'Safari' },
+        music: { id: 'music', label: 'Music' },
+        about: { id: 'about', label: 'About Me' },
+        tech: { id: 'techstack', label: 'Tech Stack' },
+        terminal: { id: 'terminal', label: 'Terminal' },
+        calendar: { id: 'calendar', label: 'Calendar' },
+    };
+
+    const commands: Record<string, { execute: (args?: string[]) => string[] | null | Promise<string[] | null> }> = {
         help: {
             execute: () => [
                 'Available commands:',
@@ -33,6 +48,11 @@ const Terminal = () => {
                 'contact',
                 'experience',
                 'education',
+                'open <app>',
+                'theme <dark|light|toggle|color>',
+                'play music',
+                'github',
+                'blog',
                 'clear',
                 'whoami',
                 'date',
@@ -69,6 +89,101 @@ const Terminal = () => {
                 '2D Shooter Game – Action-packed 2D shooting game with multiple levels and engaging mechanics (Unity, C#, Game Development)',
                 'Zipit – GUI app for compressing and extracting ZIP archives, lightweight and efficient (Python, Tkinter, Zipfile)'
             ]
+        },
+        open: {
+            execute: (args = []) => {
+                if (!args.length) {
+                    return ['Usage: open <app>. Try "open finder" or "open resume".'];
+                }
+                const appKey = args[0].toLowerCase();
+                const target = appAlias[appKey];
+                if (!target) {
+                    return [`Unknown app "${appKey}".`];
+                }
+                openWindow(target.id);
+                return [`Launching ${target.label}...`];
+            }
+        },
+        theme: {
+            execute: (args = []) => {
+                if (!args.length) {
+                    return ['Usage: theme <dark|light|toggle|color> [colorName]'];
+                }
+                const mode = args[0].toLowerCase();
+                if (mode === 'toggle') {
+                    toggleDarkMode();
+                    return ['Toggled theme appearance.'];
+                }
+                if (mode === 'dark' && !darkMode) {
+                    toggleDarkMode();
+                    return ['Dark mode enabled.'];
+                }
+                if (mode === 'light' && darkMode) {
+                    toggleDarkMode();
+                    return ['Light mode enabled.'];
+                }
+                if (mode === 'color') {
+                    const color = args[1]?.toLowerCase();
+                    if (!color || !(color in themeColors)) {
+                        return [
+                            'Usage: theme color <blue|purple|green|orange|pink|red|cyan|amber>',
+                        ];
+                    }
+                    const typedColor = color as ThemeColor;
+                    setThemeColor(typedColor);
+                    return [`Theme color switched to ${themeColors[typedColor].name}.`];
+                }
+                return ['No theme change was necessary.'];
+            }
+        },
+        play: {
+            execute: (args = []) => {
+                const target = args[0]?.toLowerCase();
+                if (target === 'music' || !target) {
+                    openWindow('music');
+                    return ['Opening Music app — enjoy the vibe!'];
+                }
+                return ['Usage: play music'];
+            }
+        },
+        github: {
+            execute: async () => {
+                try {
+                    const response = await fetch('https://api.github.com/users/alaeddinedaly');
+                    if (!response.ok) throw new Error('GitHub request failed');
+                    const data = await response.json();
+                    return [
+                        `GitHub Stats for ${data.login}`,
+                        `Followers: ${data.followers}`,
+                        `Public Repos: ${data.public_repos}`,
+                        `Gists: ${data.public_gists}`,
+                        `Last Updated: ${new Date(data.updated_at).toLocaleDateString()}`,
+                    ];
+                } catch (error) {
+                    console.error(error);
+                    return ['Unable to fetch GitHub stats right now.'];
+                }
+            }
+        },
+        blog: {
+            execute: async () => {
+                try {
+                    const response = await fetch('https://dev.to/api/articles?username=alaeddinedaly&per_page=3');
+                    if (!response.ok) throw new Error('Blog request failed');
+                    const articles = await response.json();
+                    if (!articles.length) {
+                        return ['No recent blog posts found.'];
+                    }
+                    const formatted = articles.map(
+                        (article: any, index: number) =>
+                            `${index + 1}. ${article.title} (${new Date(article.published_at).toLocaleDateString()})\n${article.url}`,
+                    );
+                    return ['Latest articles:', ...formatted];
+                } catch (error) {
+                    console.error(error);
+                    return ['Could not reach the blog feed right now.'];
+                }
+            }
         },
         contact: {
             execute: () => [
@@ -151,19 +266,45 @@ const Terminal = () => {
             return;
         }
 
+        setHistory((prev) => [
+            ...prev,
+            { type: 'prompt', content: trimmedInput },
+        ]);
+
         if (command) {
-            const output = command.execute(args);
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            setHistory((prev) => [
-                ...prev,
-                { type: 'prompt', content: trimmedInput },
-                ...(output ? [{ type: 'output', content: output.join('\n') }] : [])
-            ]);
+            try {
+                const output = command.execute(args);
+                if (output && typeof (output as Promise<string[] | null>).then === 'function') {
+                    (output as Promise<string[] | null>)
+                        .then((asyncResult) => {
+                            if (asyncResult && asyncResult.length) {
+                                setHistory((prev) => [
+                                    ...prev,
+                                    { type: 'output', content: asyncResult.join('\n') },
+                                ]);
+                            }
+                        })
+                        .catch((error: Error) => {
+                            setHistory((prev) => [
+                                ...prev,
+                                { type: 'error', content: error.message || 'Command failed.' },
+                            ]);
+                        });
+                } else if (output && (output as string[]).length) {
+                    setHistory((prev) => [
+                        ...prev,
+                        { type: 'output', content: (output as string[]).join('\n') },
+                    ]);
+                }
+            } catch (error: any) {
+                setHistory((prev) => [
+                    ...prev,
+                    { type: 'error', content: error.message || 'Command failed.' },
+                ]);
+            }
         } else {
             setHistory((prev) => [
                 ...prev,
-                { type: 'prompt', content: trimmedInput },
                 { type: 'error', content: `zsh: command not found: ${cmd}` }
             ]);
         }

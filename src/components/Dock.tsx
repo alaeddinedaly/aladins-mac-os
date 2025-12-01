@@ -17,6 +17,7 @@ const dockApps: DockApp[] = [
   { id: 'music', title: 'Music', icon: 'music.png', component: 'Music' },
   { id: 'settings', title: 'Settings', icon: 'settings.png', component: 'Settings' },
   { id: 'github', title: 'Github', icon: 'github.png', component: '' },
+  { id: 'linkedin', title: 'Linkedin', icon: 'linkedin.png', component: '' },
   { id: 'trash', title: 'Trash', icon: 'trash.png', component: 'Trash' },
 ];
 
