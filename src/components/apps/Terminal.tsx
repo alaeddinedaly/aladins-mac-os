@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useThemeStore, themeColors, type ThemeColor } from '@/store/themeStore';
 import { useWindowStore } from '@/store/windowStore';
-import { X, Minus, Maximize2 } from 'lucide-react';
 
 interface HistoryEntry {
     type: 'prompt' | 'output' | 'error';
@@ -13,7 +12,7 @@ const Terminal = () => {
     const darkMode = useThemeStore((state) => state.darkMode);
     const toggleDarkMode = useThemeStore((state) => state.toggleDarkMode);
     const setThemeColor = useThemeStore((state) => state.setThemeColor);
-    const { closeWindow, minimizeWindow, maximizeWindow, openWindow } = useWindowStore();
+    const { openWindow } = useWindowStore();
 
     const [history, setHistory] = useState<HistoryEntry[]>([
         { type: 'output', content: 'Last login: ' + new Date().toLocaleString() + ' on ttys000' },
@@ -52,12 +51,15 @@ const Terminal = () => {
                 'theme <dark|light|toggle|color>',
                 'play music',
                 'github',
-                'blog',
+                'linkedin',
+                'email',
+                'repo',
                 'clear',
                 'whoami',
                 'date',
                 'echo [text]',
-                'ls'
+                'sudo [command]',
+                'matrix'
             ]
         },
         about: {
@@ -149,10 +151,12 @@ const Terminal = () => {
         github: {
             execute: async () => {
                 try {
+                    window.open('https://github.com/alaeddinedaly', '_blank');
                     const response = await fetch('https://api.github.com/users/alaeddinedaly');
                     if (!response.ok) throw new Error('GitHub request failed');
                     const data = await response.json();
                     return [
+                        `Opened GitHub profile.`,
                         `GitHub Stats for ${data.login}`,
                         `Followers: ${data.followers}`,
                         `Public Repos: ${data.public_repos}`,
@@ -163,6 +167,24 @@ const Terminal = () => {
                     console.error(error);
                     return ['Unable to fetch GitHub stats right now.'];
                 }
+            }
+        },
+        linkedin: {
+            execute: () => {
+                window.open('https://linkedin.com/in/daly-ala-eddine', '_blank');
+                return ['Opened LinkedIn profile. Let\'s connect!'];
+            }
+        },
+        email: {
+            execute: () => {
+                window.open('mailto:dalyalaeddine@gmail.com');
+                return ['Opening mail client...'];
+            }
+        },
+        repo: {
+            execute: () => {
+                window.open('https://github.com/alaeddinedaly/macos-portfolio', '_blank');
+                return ['Opening source code... ⭐ Star it if you like it!'];
             }
         },
         blog: {
@@ -223,6 +245,17 @@ const Terminal = () => {
         },
         ls: {
             execute: () => ['Resume_en.pdf', 'Portfolio/', 'Projects/']
+        },
+        sudo: {
+            execute: () => ['Permission denied: You are not Aladin. Nice try though! 😉']
+        },
+        matrix: {
+            execute: () => [
+                'Wake up, Neo...',
+                'The Matrix has you...',
+                'Follow the white rabbit.',
+                'Knock, knock, Neo.'
+            ]
         }
     };
 
@@ -313,61 +346,15 @@ const Terminal = () => {
 
     return (
         <div
-            className={`rounded-xl overflow-hidden shadow-2xl border ${
-                darkMode ? 'border-neutral-700' : 'border-gray-200'
-            } w-full h-full max-h-[600px] flex flex-col`}
+            className="w-full h-full flex flex-col font-mono text-sm"
             onClick={() => inputRef.current?.focus()}
         >
             <div
-                className={`flex items-center px-3 py-2 gap-2 ${
-                    darkMode ? 'bg-[#2b2b2b]' : 'bg-gray-100'
-                }`}
-            >
-                <div className="flex gap-2">
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            closeWindow('terminal');
-                        }}
-                        className="w-3 h-3 rounded-full bg-[#ff5f56] hover:brightness-110 transition-all flex items-center justify-center group"
-                    >
-                        <X className="w-2 h-2 opacity-0 group-hover:opacity-100 text-black/60" />
-                    </button>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            minimizeWindow('terminal');
-                        }}
-                        className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:brightness-110 transition-all flex items-center justify-center group"
-                    >
-                        <Minus className="w-2 h-2 opacity-0 group-hover:opacity-100 text-black/60" />
-                    </button>
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            maximizeWindow('terminal');
-                        }}
-                        className="w-3 h-3 rounded-full bg-[#27c93f] hover:brightness-110 transition-all flex items-center justify-center group"
-                    >
-                        <Maximize2 className="w-2 h-2 opacity-0 group-hover:opacity-100 text-black/60" />
-                    </button>
-                </div>
-                <span
-                    className={`text-xs font-medium mx-auto ${
-                        darkMode ? 'text-neutral-400' : 'text-gray-500'
-                    }`}
-                >
-                    aladin — bash — 80x24
-                </span>
-            </div>
-
-            <div
                 ref={terminalRef}
-                className={`flex-1 p-4 overflow-y-auto font-mono text-sm backdrop-blur-xl transition-colors duration-300 ${
-                    darkMode
-                        ? 'bg-black/80 text-gray-100'
-                        : 'bg-white/80 text-gray-900'
-                }`}
+                className={`flex-1 p-4 overflow-y-auto transition-colors duration-300 ${darkMode
+                    ? 'bg-black/80 text-gray-100'
+                    : 'bg-white/80 text-gray-900'
+                    }`}
             >
                 {history.map((entry, index) => (
                     <motion.div
@@ -392,9 +379,8 @@ const Terminal = () => {
                         )}
                         {entry.type === 'output' && (
                             <pre
-                                className={`whitespace-pre-wrap ${
-                                    darkMode ? 'text-gray-100' : 'text-gray-800'
-                                }`}
+                                className={`whitespace-pre-wrap ${darkMode ? 'text-gray-100' : 'text-gray-800'
+                                    }`}
                             >
                                 {entry.content}
                             </pre>
@@ -421,9 +407,8 @@ const Terminal = () => {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        className={`flex-1 bg-transparent outline-none ${
-                            darkMode ? 'text-white caret-white' : 'text-black caret-black'
-                        }`}
+                        className={`flex-1 bg-transparent outline-none ${darkMode ? 'text-white caret-white' : 'text-black caret-black'
+                            }`}
                         autoFocus
                         spellCheck={false}
                     />

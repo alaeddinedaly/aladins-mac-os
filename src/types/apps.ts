@@ -1,7 +1,7 @@
 export interface AppWindow {
   id: string;
   title: string;
-  icon: string;
+  icon: string | React.ReactNode;
   component: string;
   position: { x: number; y: number };
   size: { width: number; height: number };
@@ -16,7 +16,7 @@ export interface AppWindow {
 export interface DockApp {
   id: string;
   title: string;
-  icon: string;
+  icon: string | React.ReactNode;
   component: string;
 }
 
@@ -28,6 +28,6 @@ export interface Project {
   link?: string;
   category: string;
   readme: string;
-  githubUrl ?: string;
-  liveUrl ?: string;
+  githubUrl?: string;
+  liveUrl?: string;
 }

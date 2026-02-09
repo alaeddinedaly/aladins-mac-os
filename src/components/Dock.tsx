@@ -1,13 +1,16 @@
-import { motion, useMotionValue, useSpring, useTransform, MotionValue } from 'framer-motion';
-import { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, MotionValue, AnimatePresence } from 'framer-motion';
+import { useRef, useState } from 'react';
 import { useWindowStore } from '@/store/windowStore';
 import { DockApp } from '@/types/apps';
+import { Mail } from 'lucide-react';
 
 const dockApps: DockApp[] = [
-  { id: 'about', title: 'About Me', icon: 'finder.png', component: 'AboutMe' },
+  { id: 'finder', title: 'Finder', icon: 'developer.png', component: 'Finder' },
   { id: 'safari', title: 'Safari', icon: 'safari.png', component: 'Safari' },
-  { id: 'finder', title: 'Projects', icon: 'projects.png', component: 'Finder' },
+  { id: 'mail', title: 'Mail', icon: 'mail.png', component: 'Mail' },
   { id: 'terminal', title: 'Terminal', icon: 'terminal.png', component: 'Terminal' },
+  { id: 'activity', title: 'Activity', icon: 'settings.png', component: 'ActivityMonitor' },
+  { id: 'about', title: 'About Me', icon: 'finder.png', component: 'AboutMe' },
   { id: 'techstack', title: 'Tech Stack', icon: 'techstack.png', component: 'TechStack' },
   { id: 'resume', title: 'Resume', icon: 'pages.png', component: 'Resume' },
   { id: 'calculator', title: 'Calculator', icon: 'calculator.png', component: 'Calculator' },
@@ -21,19 +24,20 @@ const dockApps: DockApp[] = [
   { id: 'trash', title: 'Trash', icon: 'trash.png', component: 'Trash' },
 ];
 
-const DockIcon = ({app, mouseX, onAppClick}: {
+const DockIcon = ({ app, mouseX, onAppClick }: {
   app: DockApp,
   mouseX: MotionValue<number>,
   onAppClick?: (appId: string) => void
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   const distance = useTransform(mouseX, (val) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
     return val - bounds.x - bounds.width / 2;
   });
 
-  const widthSync = useTransform(distance, [-150, 0, 150], [50, 80, 50]);
+  const widthSync = useTransform(distance, [-150, 0, 150], [50, 90, 50]);
   const width = useSpring(widthSync, { mass: 0.1, stiffness: 150, damping: 12 });
 
   const openWindow = useWindowStore((state) => state.openWindow);
@@ -44,31 +48,72 @@ const DockIcon = ({app, mouseX, onAppClick}: {
     if (onAppClick) {
       onAppClick(app.id);
     } else {
+      if (app.id === 'github') {
+        window.open('https://github.com/alaeddinedaly', '_blank');
+        return;
+      }
+      if (app.id === 'linkedin') {
+        window.open('https://linkedin.com/in/daly-ala-eddine', '_blank');
+        return;
+      }
       openWindow(app.id);
     }
   };
 
   return (
-      <motion.div
-          ref={ref}
-          style={{ width }}
-          className="relative flex items-end justify-center"
-          whileHover={{ y: -10 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={handleClick}
-      >
-        <div className="relative cursor-pointer">
-          <img
-              src={app.icon}
-              alt={app.title}
-              className="w-12 h-12 rounded-xl shadow-lg select-none pointer-events-none"
-              draggable={false}
-          />
-          {isActive && (
-              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-foreground/70" />
+    <motion.div
+      ref={ref}
+      style={{ width }}
+      className="relative flex items-end justify-center group focus:outline-none"
+      whileHover={{ y: -10 }}
+      whileTap={{ scale: 0.9 }}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          handleClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open ${app.title}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative cursor-pointer">
+        {/* Tooltip */}
+        <AnimatePresence>
+          {isHovered && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, x: '-50%' }}
+              animate={{ opacity: 1, y: -15, x: '-50%' }}
+              exit={{ opacity: 0, y: 2 }}
+              className="absolute -top-full left-1/2 whitespace-nowrap px-3 py-1 bg-black/50 backdrop-blur-md text-white text-xs rounded-md border border-white/10 pointer-events-none"
+              style={{
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+              }}
+            >
+              {app.title}
+            </motion.div>
           )}
-        </div>
-      </motion.div>
+        </AnimatePresence>
+
+        {typeof app.icon === 'string' ? (
+          <img
+            src={app.icon}
+            alt={app.title}
+            className="w-full aspect-square rounded-2xl shadow-lg select-none pointer-events-none object-cover"
+            draggable={false}
+          />
+        ) : (
+          <div className="w-full aspect-square select-none pointer-events-none">
+            {app.icon}
+          </div>
+        )}
+        {isActive && (
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-foreground/70" />
+        )}
+      </div>
+    </motion.div>
   );
 };
 
@@ -76,23 +121,27 @@ const Dock = ({ onAppClick }: { onAppClick?: (appId: string) => void }) => {
   const mouseX = useMotionValue(Infinity);
 
   return (
-      <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5, ease: 'easeOut' }}
-          className="fixed bottom-2 left-0 right-0 z-50 flex justify-center"
-          onMouseMove={(e) => mouseX.set(e.pageX)}
-          onMouseLeave={() => mouseX.set(Infinity)}
+    <motion.div
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 1.5, duration: 0.8, type: 'spring', bounce: 0.3 }}
+      className="fixed bottom-4 left-0 right-0 z-50 flex justify-center pointer-events-none pb-2"
+      onMouseMove={(e) => mouseX.set(e.pageX)}
+      onMouseLeave={() => mouseX.set(Infinity)}
+    >
+      <div
+        className="flex items-end gap-3 px-4 py-3 rounded-3xl border border-white/20 shadow-2xl pointer-events-auto"
+        style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(15px)',
+          boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 50px rgba(0,0,0,0.3)'
+        }}
       >
-        <div
-            className="flex items-end gap-3 px-6 py-4 rounded-2xl glass dock-shadow"
-            style={{ backgroundColor: 'hsl(var(--macos-dock-bg))' }}
-        >
-          {dockApps.map((app) => (
-              <DockIcon key={app.id} app={app} mouseX={mouseX} onAppClick={onAppClick} />
-          ))}
-        </div>
-      </motion.div>
+        {dockApps.map((app) => (
+          <DockIcon key={app.id} app={app} mouseX={mouseX} onAppClick={onAppClick} />
+        ))}
+      </div>
+    </motion.div>
   );
 };
 

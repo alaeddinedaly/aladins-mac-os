@@ -141,6 +141,22 @@ const defaultApps: Omit<AppWindow, 'isOpen' | 'isMinimized' | 'isMaximized' | 'z
     component: 'ResumeVideo',
     position: { x: 200, y: 120 },
     size: { width: 800, height: 550 },
+  },
+  {
+    id: 'mail',
+    title: 'Mail',
+    icon: '✉️',
+    component: 'Mail',
+    position: { x: 150, y: 100 },
+    size: { width: 850, height: 600 },
+  },
+  {
+    id: 'activity',
+    title: 'Activity Monitor',
+    icon: '📈',
+    component: 'ActivityMonitor',
+    position: { x: 100, y: 100 },
+    size: { width: 800, height: 600 },
   }
 ];
 
@@ -154,7 +170,7 @@ const getCustomPosition = (appId: string, appTemplate: any) => {
     case 'terminal':
       // Top left position
       return {
-        x: padding + 160 ,
+        x: padding + 160,
         y: padding + 30 // Extra padding for menubar
       };
     case 'resume':
@@ -176,106 +192,106 @@ export const useWindowStore = create<WindowStore>((set) => ({
   windows: [],
   highestZIndex: 1,
   openWindow: (appId: string) =>
-      set((state) => {
-        const existingWindow = state.windows.find((w) => w.id === appId);
+    set((state) => {
+      const existingWindow = state.windows.find((w) => w.id === appId);
 
-        if (existingWindow) {
-          const appTemplate = defaultApps.find((a) => a.id === appId);
-          const customPosition = appTemplate ? getCustomPosition(appId, appTemplate) : existingWindow.position;
-
-          return {
-            windows: state.windows.map((w) =>
-                w.id === appId
-                    ? {
-                      ...w,
-                      isOpen: true,
-                      isMinimized: false,
-                      zIndex: state.highestZIndex + 1,
-                      position: customPosition,
-                    }
-                    : w
-            ),
-            highestZIndex: state.highestZIndex + 1,
-          };
-        }
-
+      if (existingWindow) {
         const appTemplate = defaultApps.find((a) => a.id === appId);
-        if (!appTemplate) return state;
-
-        const customPosition = getCustomPosition(appId, appTemplate);
+        const customPosition = appTemplate ? getCustomPosition(appId, appTemplate) : existingWindow.position;
 
         return {
-          windows: [
-            ...state.windows,
-            {
-              ...appTemplate,
-              isOpen: true,
-              isMinimized: false,
-              isMaximized: false,
-              zIndex: state.highestZIndex + 1,
-              position: customPosition,
-            },
-          ],
+          windows: state.windows.map((w) =>
+            w.id === appId
+              ? {
+                ...w,
+                isOpen: true,
+                isMinimized: false,
+                zIndex: state.highestZIndex + 1,
+                position: customPosition,
+              }
+              : w
+          ),
           highestZIndex: state.highestZIndex + 1,
         };
-      }),
-  closeWindow: (windowId: string) =>
-      set((state) => ({
-        windows: state.windows.filter((w) => w.id !== windowId),
-      })),
-  minimizeWindow: (windowId: string) =>
-      set((state) => ({
-        windows: state.windows.map((w) =>
-            w.id === windowId ? { ...w, isMinimized: true } : w
-        ),
-      })),
-  maximizeWindow: (windowId: string) =>
-      set((state) => ({
-        windows: state.windows.map((w) => {
-          if (w.id !== windowId) return w;
+      }
 
-          // Toggle between maximized and restored state
-          if (w.isMaximized) {
-            // Restore to previous size and position
-            return {
-              ...w,
-              isMaximized: false,
-              size: w.previousSize || w.size,
-              position: w.previousPosition || w.position,
-            };
-          } else {
-            // Save current state and maximize
-            return {
-              ...w,
-              isMaximized: true,
-              previousSize: w.size,
-              previousPosition: w.position,
-              size: {
-                width: window.innerWidth - 40,
-                height: window.innerHeight - 100,
-              },
-              position: { x: 20, y: 40 },
-            };
-          }
-        }),
-      })),
-  focusWindow: (windowId: string) =>
-      set((state) => ({
-        windows: state.windows.map((w) =>
-            w.id === windowId ? { ...w, zIndex: state.highestZIndex + 1 } : w
-        ),
+      const appTemplate = defaultApps.find((a) => a.id === appId);
+      if (!appTemplate) return state;
+
+      const customPosition = getCustomPosition(appId, appTemplate);
+
+      return {
+        windows: [
+          ...state.windows,
+          {
+            ...appTemplate,
+            isOpen: true,
+            isMinimized: false,
+            isMaximized: false,
+            zIndex: state.highestZIndex + 1,
+            position: customPosition,
+          },
+        ],
         highestZIndex: state.highestZIndex + 1,
-      })),
+      };
+    }),
+  closeWindow: (windowId: string) =>
+    set((state) => ({
+      windows: state.windows.filter((w) => w.id !== windowId),
+    })),
+  minimizeWindow: (windowId: string) =>
+    set((state) => ({
+      windows: state.windows.map((w) =>
+        w.id === windowId ? { ...w, isMinimized: true } : w
+      ),
+    })),
+  maximizeWindow: (windowId: string) =>
+    set((state) => ({
+      windows: state.windows.map((w) => {
+        if (w.id !== windowId) return w;
+
+        // Toggle between maximized and restored state
+        if (w.isMaximized) {
+          // Restore to previous size and position
+          return {
+            ...w,
+            isMaximized: false,
+            size: w.previousSize || w.size,
+            position: w.previousPosition || w.position,
+          };
+        } else {
+          // Save current state and maximize
+          return {
+            ...w,
+            isMaximized: true,
+            previousSize: w.size,
+            previousPosition: w.position,
+            size: {
+              width: window.innerWidth - 40,
+              height: window.innerHeight - 100,
+            },
+            position: { x: 20, y: 40 },
+          };
+        }
+      }),
+    })),
+  focusWindow: (windowId: string) =>
+    set((state) => ({
+      windows: state.windows.map((w) =>
+        w.id === windowId ? { ...w, zIndex: state.highestZIndex + 1 } : w
+      ),
+      highestZIndex: state.highestZIndex + 1,
+    })),
   updateWindowPosition: (windowId: string, position: { x: number; y: number }) =>
-      set((state) => ({
-        windows: state.windows.map((w) =>
-            w.id === windowId ? { ...w, position } : w
-        ),
-      })),
+    set((state) => ({
+      windows: state.windows.map((w) =>
+        w.id === windowId ? { ...w, position } : w
+      ),
+    })),
   updateWindowSize: (windowId: string, size: { width: number; height: number }) =>
-      set((state) => ({
-        windows: state.windows.map((w) =>
-            w.id === windowId ? { ...w, size } : w
-        ),
-      })),
+    set((state) => ({
+      windows: state.windows.map((w) =>
+        w.id === windowId ? { ...w, size } : w
+      ),
+    })),
 }));
