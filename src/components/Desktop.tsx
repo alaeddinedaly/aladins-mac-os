@@ -25,6 +25,7 @@ const Mail = lazy(() => import('./apps/Mail'));
 const ActivityMonitor = lazy(() => import('./apps/ActivityMonitor'));
 const Terminal = lazy(() => import('@/components/apps/Terminal'));
 const WallpaperSettings = lazy(() => import('./apps/WallpaperSettings'));
+const Snake = lazy(() => import('./apps/Snake'));
 
 // Empty Folder Component
 const EmptyFolder = () => {
@@ -137,6 +138,12 @@ const Desktop = () => {
 
     return () => clearTimeout(timer);
   }, []); // Empty dependency array means this runs once on mount
+
+  // Grid and Item Constants
+  const GRID_SIZE_X = 110;
+  const GRID_SIZE_Y = 110;
+  const ITEM_WIDTH = 96; // w-24 = 6rem = 96px
+  const TOP_OFFSET = 40; // Menu bar + padding
 
   const [desktopItems, setDesktopItems] = useState<DesktopItem[]>([
     {
@@ -295,6 +302,7 @@ const Desktop = () => {
       case 'TextEditor': content = <TextEditor windowId={windowId} />; break;
       case 'Terminal': content = <Terminal />; break;
       case 'WallpaperSettings': content = <WallpaperSettings currentWallpaper={wallpaper} onWallpaperChange={setWallpaper} />; break;
+      case 'Snake': content = <Snake />; break;
       default:
         console.log('Component not found:', component);
         return <div>App not found: {component}</div>;
@@ -322,11 +330,35 @@ const Desktop = () => {
 
       {/* Desktop Icons */}
       {desktopItems.map((item) => (
-        <div
+        <motion.div
           key={item.id}
-          className={`absolute flex flex-col items-center gap-2 cursor-pointer group p-2 rounded-lg transition-all ${selectedItem === item.id ? 'bg-blue-500/30' : ''
+          drag
+          dragMomentum={false}
+          onDragEnd={(_, info) => {
+            const rawX = item.position.x + info.offset.x;
+            const rawY = item.position.y + info.offset.y;
+
+            // Snap to grid
+            let snappedX = Math.round(rawX / GRID_SIZE_X) * GRID_SIZE_X;
+            let snappedY = Math.round(rawY / GRID_SIZE_Y) * GRID_SIZE_Y;
+
+            // Constrain to screen
+            // Use window.innerWidth - ITEM_WIDTH to ensure the whole item fits
+            snappedX = Math.max(10, Math.min(snappedX, window.innerWidth - ITEM_WIDTH - 10));
+            snappedY = Math.max(TOP_OFFSET, Math.min(snappedY, window.innerHeight - GRID_SIZE_Y - 80));
+
+            const newItems = desktopItems.map((i) =>
+              i.id === item.id
+                ? { ...i, position: { x: snappedX, y: snappedY } }
+                : i
+            );
+            setDesktopItems(newItems);
+          }}
+          className={`absolute flex flex-col items-center gap-2 cursor-pointer group p-2 rounded-lg transition-colors w-24 ${selectedItem === item.id ? 'bg-blue-500/30' : ''
             }`}
           style={{
+            x: 0,
+            y: 0,
             left: item.position.x,
             top: item.position.y,
             zIndex: 1
@@ -337,11 +369,11 @@ const Desktop = () => {
           <div className="text-6xl group-hover:scale-110 transition-transform">
             {item.icon}
           </div>
-          <span className={`text-sm font-medium drop-shadow-lg px-2 py-1 rounded ${selectedItem === item.id ? 'bg-blue-600 text-white' : 'text-white'
+          <span className={`text-sm font-medium drop-shadow-lg px-2 py-1 rounded text-center leading-tight ${selectedItem === item.id ? 'bg-blue-600 text-white' : 'text-white'
             }`}>
             {item.name}
           </span>
-        </div>
+        </motion.div>
       ))}
 
       {/* Context Menu */}

@@ -20,7 +20,7 @@ const Window = ({ window, children }: WindowProps) => {
     updateWindowSize,
   } = useWindowStore();
 
-  const isFullWidth = ['terminal', 'mail', 'activity'].includes(window.id);
+  const isFullWidth = ['terminal', 'mail', 'activity', 'snake'].includes(window.id);
 
   const [isRendered, setIsRendered] = useState(!window.isMinimized);
 

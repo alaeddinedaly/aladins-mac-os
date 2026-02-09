@@ -2,14 +2,15 @@ import { motion, useMotionValue, useSpring, useTransform, MotionValue, AnimatePr
 import { useRef, useState } from 'react';
 import { useWindowStore } from '@/store/windowStore';
 import { DockApp } from '@/types/apps';
-import { Mail } from 'lucide-react';
+import { Mail, Gamepad2 } from 'lucide-react';
 
 const dockApps: DockApp[] = [
   { id: 'finder', title: 'Finder', icon: 'developer.png', component: 'Finder' },
   { id: 'safari', title: 'Safari', icon: 'safari.png', component: 'Safari' },
   { id: 'mail', title: 'Mail', icon: 'mail.png', component: 'Mail' },
   { id: 'terminal', title: 'Terminal', icon: 'terminal.png', component: 'Terminal' },
-  { id: 'activity', title: 'Activity', icon: 'settings.png', component: 'ActivityMonitor' },
+  { id: 'snake', title: 'Snake Game', icon: 'snake.png', component: 'Snake' },
+  // { id: 'activity', title: 'Activity', icon: 'settings.png', component: 'ActivityMonitor' },
   { id: 'about', title: 'About Me', icon: 'finder.png', component: 'AboutMe' },
   { id: 'techstack', title: 'Tech Stack', icon: 'techstack.png', component: 'TechStack' },
   { id: 'resume', title: 'Resume', icon: 'pages.png', component: 'Resume' },

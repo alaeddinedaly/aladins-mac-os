@@ -157,6 +157,14 @@ const defaultApps: Omit<AppWindow, 'isOpen' | 'isMinimized' | 'isMaximized' | 'z
     component: 'ActivityMonitor',
     position: { x: 100, y: 100 },
     size: { width: 800, height: 600 },
+  },
+  {
+    id: 'snake',
+    title: 'Snake Game',
+    icon: '🐍',
+    component: 'Snake',
+    position: { x: 200, y: 150 },
+    size: { width: 440, height: 500 },
   }
 ];
 
