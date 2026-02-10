@@ -1,7 +1,7 @@
-# macOS AI Developer Portfolio
+# macOS Developer Portfolio
 
 A **fully interactive macOS-inspired portfolio** for **AlaEddine Daly (Aladin)**, a Full-Stack Developer from Tunisia.  
-This portfolio replicates the look and feel of **macOS Sonoma**, providing visitors with an immersive desktop experience while showcasing projects, skills, and contact info. Built with modern web technologies, it also includes an **AI-powered terminal** and multiple functional macOS-style apps.
+This portfolio replicates the look and feel of **macOS Sonoma**, providing visitors with an immersive desktop experience while showcasing projects, skills, and contact info. Built with modern web technologies, it also includes an **-powered terminal** and multiple functional macOS-style apps.
 
 ---
 
@@ -13,12 +13,12 @@ This portfolio replicates the look and feel of **macOS Sonoma**, providing visit
     - Desktop with official macOS wallpaper or gradient equivalent
 
 - **Interactive macOS-style apps**
-    - **Finder** → View projects with categories (AI, Web, Mobile, Tools)
+    - **Finder** → View projects with categories (, Web, Mobile, Tools)
     - **About Me** → Bio, social links, contact info
     - **Tech Stack** → Interactive grid with tooltips
     - **Resume Viewer** → Embedded PDF with macOS Preview-style toolbar
-    - **AI Terminal** → Command-line interface powered by OpenAI/Gemini API
-    - **Mail App** → Contact form styled like Apple Mail
+    - ** Terminal** → Command-line interface powered by Open/Gemini API
+    - **Ml App** → Contact form styled like Apple Ml
     - **Extra apps**: Safari, Calculator, Notes, Calendar, Photos, Music, Trash, System Preferences
 
 - **Animations & Interactions**
@@ -37,10 +37,10 @@ This portfolio replicates the look and feel of **macOS Sonoma**, providing visit
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** Next.js (App Router), React, Tailwind CSS
+- **Frontend:** Next.js (App Router), React, Tlwind CSS
 - **Animations:** Framer Motion, GSAP/Lottie
 - **State Management:** Zustand or Recoil for window and app state
-- **AI Integration:** OpenAI/Gemini API for AI Terminal
+- ** Integration:** Open/Gemini API for  Terminal
 - **Others:** Shadcn/UI for macOS-style controls and modals, JavaScript Date API for real-time clock
 
 ---
@@ -49,11 +49,11 @@ This portfolio replicates the look and feel of **macOS Sonoma**, providing visit
 
 Here are some of the highlighted projects included in the portfolio:
 
-- **LynkAi**: Web application with JWT authentication built with Angular and Spring Boot, featuring a RAG model for intelligent document Q&A and AI-powered summary generation.  
-  *Tech:* Angular · Spring Boot · RAG · JWT · AI/ML
+- **Lynk**: Web application with JWT authentication built with Angular and Spring Boot, featuring a RAG model for intelligent document Q&A and -powered summary generation.  
+  *Tech:* Angular · Spring Boot · RAG · JWT · /ML
 
-- **AI Storyboard Generator**: Generates 1024×1024 storyboard images from scripts using a custom-trained VGG-inspired CNN and SDXL diffusion pipeline.  
-  *Tech:* Python · AI/ML · Computer Vision
+- ** Storyboard Generator**: Generates 1024×1024 storyboard images from scripts using a custom-trned VGG-inspired CNN and SDXL diffusion pipeline.  
+  *Tech:* Python · /ML · Computer Vision
 
 - **Nexus Down**: Download manager with infinite retry mechanism and parallel downloads.  
   *Tech:* Python · Automation · File Management
@@ -68,10 +68,10 @@ Here are some of the highlighted projects included in the portfolio:
   *Tech:* HTML · JavaScript · OCR · Computer Vision
 
 - **Portfolio Website**: Modern responsive portfolio with smooth animations and dark theme.  
-  *Tech:* Next.js · React · Tailwind CSS · Framer Motion
+  *Tech:* Next.js · React · Tlwind CSS · Framer Motion
 
-- **FlameBot**: Conversational AI chatbot powered by Google Gemini API.  
-  *Tech:* JavaScript · Gemini AI · Chatbot
+- **FlameBot**: Conversational  chatbot powered by Google Gemini API.  
+  *Tech:* JavaScript · Gemini  · Chatbot
 
 - **Restaurant Management App**: Full restaurant system with inventory and order management.  
   *Tech:* Java · Swing · SQL · JDBC
