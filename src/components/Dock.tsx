@@ -4,8 +4,8 @@ import { useWindowStore } from '@/store/windowStore';
 import { DockApp } from '@/types/apps';
 import { Mail, Gamepad2 } from 'lucide-react';
 
-const dockApps: DockApp[] = [
-  { id: 'finder', title: 'Finder', icon: 'developer.png', component: 'Finder' },
+export const dockApps: DockApp[] = [
+  { id: 'finder', title: 'Projects', icon: 'developer.png', component: 'Finder' },
   { id: 'safari', title: 'Safari', icon: 'safari.png', component: 'Safari' },
   { id: 'mail', title: 'Mail', icon: 'mail.png', component: 'Mail' },
   { id: 'terminal', title: 'Terminal', icon: 'terminal.png', component: 'Terminal' },

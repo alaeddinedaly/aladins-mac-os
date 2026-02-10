@@ -13,7 +13,7 @@ interface WindowStore {
   updateWindowSize: (windowId: string, size: { width: number; height: number }) => void;
 }
 
-const defaultApps: Omit<AppWindow, 'isOpen' | 'isMinimized' | 'isMaximized' | 'zIndex'>[] = [
+export const defaultApps: Omit<AppWindow, 'isOpen' | 'isMinimized' | 'isMaximized' | 'zIndex'>[] = [
   {
     id: 'finder',
     title: 'Projects',

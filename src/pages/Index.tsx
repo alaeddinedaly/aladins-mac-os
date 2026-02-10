@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Desktop from "@/components/Desktop.tsx";
+import MobileDesktop from "@/components/MobileDesktop";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,10 +13,10 @@ const Index = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [password, setPassword] = useState('');
+
   const audioRef = useRef<HTMLAudioElement>(null);
   const startY = useRef(0);
-  const passwordInputRef = useRef<HTMLInputElement>(null);
+
   const isMobile = useIsMobile();
 
   // Boot sequence
@@ -93,9 +94,7 @@ const Index = () => {
 
     if (offset < -50 && !showPassword) {
       setShowPassword(true);
-      setTimeout(() => {
-        passwordInputRef.current?.focus();
-      }, 100);
+
     }
 
     if (offset < -200) {
@@ -116,15 +115,8 @@ const Index = () => {
     }
   };
 
-  const handlePasswordSubmit = () => {
-    handleUnlock();
-  };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handlePasswordSubmit();
-    }
-  };
+
 
   useEffect(() => {
     if (isDragging) {
@@ -170,7 +162,7 @@ const Index = () => {
   }
 
   if (isUnlocked) {
-    return <Desktop />;
+    return isMobile ? <MobileDesktop /> : <Desktop />;
   }
 
   return (
@@ -236,7 +228,7 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Middle section - Password field - RESPONSIVE */}
+          {/* Middle section - Login Button - RESPONSIVE */}
           <div
             className="transition-all duration-500 ease-out"
             style={{
@@ -260,35 +252,19 @@ const Index = () => {
                 Guest User
               </div>
 
-              {/* Password Input - RESPONSIVE */}
+              {/* Login Button - RESPONSIVE */}
               <div className={`w-full ${isMobile ? 'max-w-[280px]' : 'max-w-xs'}`}>
-                <div className="relative">
-                  <input
-                    ref={passwordInputRef}
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Enter Password"
-                    className={`w-full rounded-lg bg-white/10 backdrop-blur-2xl border border-white/20 text-white placeholder-white/50 text-center focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/15 transition-all ${isMobile ? 'px-4 py-3 text-sm' : 'px-6 py-3.5 text-base'
-                      }`}
-                    style={{
-                      boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                      WebkitTextSecurity: password ? 'disc' : 'none'
-                    } as React.CSSProperties}
-                  />
-                  {password && (
-                    <button
-                      onClick={handlePasswordSubmit}
-                      className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-all ${isMobile ? 'w-6 h-6' : 'w-7 h-7'
-                        }`}
-                    >
-                      <svg width={isMobile ? "12" : "14"} height={isMobile ? "12" : "14"} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-                        <polyline points="9 18 15 12 9 6" />
-                      </svg>
-                    </button>
-                  )}
-                </div>
+                <button
+                  onClick={handleUnlock}
+                  className={`group relative w-full rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-xl border border-white/20 text-white transition-all duration-300 overflow-hidden ${isMobile ? 'px-6 py-3 text-sm' : 'px-8 py-3.5 text-base'
+                    }`}
+                  style={{
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                  <span className="relative font-medium tracking-wide">Enter as Guest</span>
+                </button>
               </div>
             </div>
           </div>
@@ -316,18 +292,15 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Alternative: Click to show password */}
+            {/* Alternative: Click to show login */}
             {!showPassword && !isDragging && (
               <div className={`text-center ${isMobile ? 'mt-4' : 'mt-6'}`}>
                 <button
-                  onClick={() => {
-                    setShowPassword(true);
-                    setTimeout(() => passwordInputRef.current?.focus(), 100);
-                  }}
+                  onClick={() => setShowPassword(true)}
                   className={`opacity-70 hover:opacity-100 transition-opacity ${isMobile ? 'text-xs' : 'text-sm'}`}
                   style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}
                 >
-                  or click to enter password
+                  or click to announce yourself
                 </button>
               </div>
             )}

@@ -10,11 +10,11 @@ const AboutMe = () => {
         className="text-center space-y-4"
       >
         <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-primary relative group cursor-pointer">
-          <img
+          {/* <img
             src="/me.jpg"
             alt="AlaEddine Daly"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+          /> */}
           <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
         </div>
         <div>
